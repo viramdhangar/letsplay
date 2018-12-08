@@ -2,20 +2,21 @@ package com.waio.model;
 
 public class LeagueDTO {
 
-	private int id;
+	private String id;
 	private String league;
 	private int size;
 	private int entryFee;
+	
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	/**

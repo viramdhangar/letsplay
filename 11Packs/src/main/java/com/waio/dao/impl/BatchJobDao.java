@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,8 @@ import com.waio.cricapi.Players;
 import com.waio.cricapi.Team;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
+import com.waio.model.LeagueDTO;
+import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerSquadDTO;
 
 @Repository("BatchJobDao")
@@ -145,5 +148,32 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                }
 	            });
 		return insertedPlayers.length;
+	}
+	
+	@Override
+	public List<LeagueDTO> getLeagues() {
+		String sql = "select * from league";
+		return getJdbcTemplate().query(sql, new Object[] {}, new BeanPropertyRowMapper<LeagueDTO>(LeagueDTO.class));
+	}
+	
+	@Override
+	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
+		String sql = "insert into match_league (match_id, league_id) values (?, ?)";
+		int[] insertedLeagues = getJdbcTemplate().batchUpdate(sql,
+	            new BatchPreparedStatementSetter() {
+	                @Override
+	                public void setValues(PreparedStatement ps, int i)
+	                        throws SQLException {
+	                	MatchesLeagues matchesLeague = matchesLeagesList.get(i);
+	                    ps.setString(1, matchesLeague.getMatchId());
+	                    ps.setString(2, matchesLeague.getLeagueId());
+	                }
+
+	                @Override
+	                public int getBatchSize() {
+	                    return matchesLeagesList.size();
+	                }
+	            });
+		return insertedLeagues.length;
 	}
 }

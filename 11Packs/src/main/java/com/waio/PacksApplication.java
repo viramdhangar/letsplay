@@ -12,4 +12,6 @@ public class PacksApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PacksApplication.class, args);
 	}
+	
+	// Data too long for column 'nation' at row 1 
 }

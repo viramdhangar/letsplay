@@ -34,7 +34,7 @@ public class CricApiService implements ICricApiService {
 
 	@Override
 	public TeamSquad getSquad(String uniqueId) {
-		final String uri = "https://cricapi.com/api/fantasySquad?apikey=VC60hvq1q4N0UK2m0gZwyTfvcl92&unique_id=1034809";
+		final String uri = "https://cricapi.com/api/fantasySquad?apikey=VC60hvq1q4N0UK2m0gZwyTfvcl92&unique_id="+uniqueId+"";
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			TeamSquad result = restTemplate.getForObject(uri, TeamSquad.class);

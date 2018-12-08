@@ -3,6 +3,7 @@
  */
 package com.waio.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,8 @@ import com.waio.cricapi.MatchesDTO;
 import com.waio.cricapi.NewMatchesData;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
+import com.waio.model.LeagueDTO;
+import com.waio.model.MatchesLeagues;
 import com.waio.service.IBatchJobService;
 import com.waio.service.ICricApiService;
 
@@ -52,9 +55,23 @@ public class BatchJobService implements IBatchJobService{
 		}
 		
 		if(batchJobDao.insertMatches(matchesList)>0) {
-			for(MatchesDTO matches : newMatchesData.getMatches()) {
+			// set leagues bean for all matches
+			List<LeagueDTO> leagueList = batchJobDao.getLeagues();
+			List<MatchesLeagues> matchesLeagesList = new ArrayList<MatchesLeagues>();
+			for(MatchesDTO matches : matchesList) {
 				insertSquad(matches.getUnique_id());
+				
+				for(LeagueDTO league : leagueList) {
+					MatchesLeagues matchLeague = new MatchesLeagues();
+					matchLeague.setMatchId(matches.getUnique_id());
+					matchLeague.setLeagueId(league.getId());
+					matchesLeagesList.add(matchLeague);
+				}
 			}
+			
+			// insert leagues for all matches
+			insertLeagues(matchesLeagesList);
+			
 			return newMatchesData;	
 		}else {
 			return null;
@@ -64,5 +81,9 @@ public class BatchJobService implements IBatchJobService{
 	public int insertSquad(String uniqueId) {
 		TeamSquad teamSquad = cricApiService.getSquad(uniqueId);
 		return batchJobDao.insertSquad(uniqueId, teamSquad);
+	}
+	
+	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
+		return batchJobDao.insertLeagues(matchesLeagesList);
 	}
 }
