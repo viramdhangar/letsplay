@@ -7,35 +7,12 @@ CREATE TABLE matches (
     team1 VARCHAR(50) NOT NULL,
     team2 VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL,
-    squad BOOLEAN,
+    squad VARCHAR(20),
     toss_winner_team VARCHAR(50),
     winner_team VARCHAR(50),
-    matchStarted BOOLEAN,
-    matchLive BOOLEAN
+    matchStarted VARCHAR(20),
+    matchLive VARCHAR(20)
 );
 
-
-insert into matches (unique_id,
-    date,
-    datetime,
-    team1,
-    team2,
-    type,
-    squad,
-    toss_winner_team,
-    winner_team,
-    matchStarted,
-    matchLive )
-values 
-	('500',
-	'2018-12-08',
-	'2018-12-08 01:30:00',
-	'Sydney Sixers Women',
-	'Sydney Thunder Women',
-	'Twenty20',
-	'1',
-	'',
-	'',
-	'0',
-	'0'
-);
+ALTER TABLE matches
+ADD PRIMARY KEY(unique_id);

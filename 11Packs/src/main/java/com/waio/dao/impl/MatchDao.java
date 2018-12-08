@@ -31,7 +31,7 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 
 	@Override
 	public List<MatchesDTO> getMatches() {
-		String sql = "SELECT unique_id, DATE_FORMAT(datetime, '%Y-%m-%d') date, DATE_FORMAT(datetime,'%H:%i:%s') time, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted, matchLive FROM MATCHES";
+		String sql = "SELECT unique_id, DATE_FORMAT(datetime, '%Y-%m-%d') date, DATE_FORMAT(datetime,'%H:%i:%s') time, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted, matchLive FROM MATCHES where date>=current_date() and date<=(current_date()+2) order by date asc";
 		// AND MATCH_START_TIME>=CURRENT_TIME
 		List<MatchesDTO> matches = getJdbcTemplate().query(sql, new Object[] {},
 				new BeanPropertyRowMapper<MatchesDTO>(MatchesDTO.class));
@@ -40,7 +40,7 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 
 	@Override
 	public List<LeagueDTO> getLeagues(int matchId) {
-		String sql = "SELECT l.ID,l.LEAGUE,l.SIZE,l.ENTRY_FEE,wb.RANK,wb.AMOUNT FROM LEAGUE l, WINNING_BREAKUP wb, MATCHES M, MATCH_LEAGUE ML WHERE l.WINNING_amount=wb.league_id AND M.ID= ML.MATCH_ID AND ML.LEAGUE_ID=l.ID AND M.ID=?";
+		String sql = "SELECT l.ID,l.LEAGUE,l.SIZE,l.ENTRY_FEE,wb.RANK,wb.AMOUNT FROM LEAGUE l, WINNING_BREAKUP wb, MATCHES M, MATCH_LEAGUE ML WHERE l.WINNING_amount=wb.league_id AND M.unique_id= ML.MATCH_ID AND ML.LEAGUE_ID=l.ID AND M.unique_id=?";
 		List<LeagueDTO> leagues = getJdbcTemplate().query(sql, new Object[] { matchId },
 				new BeanPropertyRowMapper<LeagueDTO>(LeagueDTO.class));
 		return leagues;
@@ -65,7 +65,7 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				PlayerSquadDTO players = teamList.get(i);
 				ps.setInt(1, teamId);
-				ps.setInt(2, players.getId());
+				ps.setString(2, players.getId());
 			}
 
 			@Override

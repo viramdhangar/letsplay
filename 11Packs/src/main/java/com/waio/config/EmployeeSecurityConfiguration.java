@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +32,7 @@ public class EmployeeSecurityConfiguration extends WebSecurityConfigurerAdapter 
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers("/api/matches").permitAll()
+		.antMatchers("/api/job/matchesAPI").permitAll()
 		.antMatchers("/api/leagues/*").permitAll()
 		.antMatchers("/api/squad/*").permitAll()
 		.antMatchers("/api/createSquad/*/*").permitAll()

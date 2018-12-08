@@ -1,0 +1,49 @@
+/**
+ * 
+ */
+package com.waio.service.impl;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.waio.cricapi.NewMatchesData;
+import com.waio.cricapi.TeamSquad;
+import com.waio.service.ICricApiService;
+
+/**
+ * @author Viramm
+ *
+ */
+@Service("CricApiService")
+public class CricApiService implements ICricApiService {
+
+	@Override
+	public NewMatchesData newMatches() {
+		final String uri = "https://cricapi.com/api/matches?apikey=VC60hvq1q4N0UK2m0gZwyTfvcl92";
+		RestTemplate restTemplate = new RestTemplate();
+		try {
+			NewMatchesData result = restTemplate.getForObject(uri, NewMatchesData.class);
+
+			System.out.println(result);
+			return result;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return null;
+		}
+	}
+
+	@Override
+	public TeamSquad getSquad(String uniqueId) {
+		final String uri = "https://cricapi.com/api/fantasySquad?apikey=VC60hvq1q4N0UK2m0gZwyTfvcl92&unique_id=1034809";
+		RestTemplate restTemplate = new RestTemplate();
+		try {
+			TeamSquad result = restTemplate.getForObject(uri, TeamSquad.class);
+
+			System.out.println(result);
+			return result;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return null;
+		}
+	}
+}

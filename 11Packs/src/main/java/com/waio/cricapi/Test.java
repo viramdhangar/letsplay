@@ -12,8 +12,12 @@ public class Test {
     	
     	//api.getEmployees();
     	
-		NewMatchesAPI api = new NewMatchesAPI();
-		api.newMatches();
+		//NewMatchesAPI api = new NewMatchesAPI();
+		//api.newMatches();
+		
+		SquadAPI api = new SquadAPI();
+		api.getTeamSquad();
+		
     }
     
 }

@@ -2,7 +2,7 @@ package com.waio.model;
 
 public class PlayerSquadDTO {
 
-	private int id;
+	private String id;
 	private String player;
 	private String type;
 	private String nation;
@@ -36,16 +36,10 @@ public class PlayerSquadDTO {
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
 	}
-	/**
-	 * @return the id
-	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	/**
