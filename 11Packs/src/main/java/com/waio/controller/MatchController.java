@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.waio.cricapi.MatchesDTO;
 import com.waio.model.LeagueDTO;
 import com.waio.model.LeaguesResponse;
-import com.waio.model.MatchDTO;
 import com.waio.model.PlayerSquadDTO;
 import com.waio.model.ProfileDTO;
 import com.waio.model.SquedResponse;
@@ -29,8 +29,8 @@ public class MatchController {
 	IMatchService matchService;
 	
 	@GetMapping("/matches")
-	public List<MatchDTO> getMatches() {
-		List<MatchDTO> matches = new ArrayList<MatchDTO>();
+	public List<MatchesDTO> getMatches() {
+		List<MatchesDTO> matches = new ArrayList<MatchesDTO>();
 		matches = matchService.getMatches();
 		return matches;
 	}

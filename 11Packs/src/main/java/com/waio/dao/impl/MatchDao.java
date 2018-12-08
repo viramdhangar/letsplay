@@ -13,9 +13,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
-import com.waio.model.MatchDTO;
 import com.waio.model.PlayerSquadDTO;
 
 @Repository("MatchDao")
@@ -30,11 +30,11 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 	}
 
 	@Override
-	public List<MatchDTO> getMatches() {
-		String sql = "SELECT ID, MATCH_START_DATE, MATCH_START_TIME, TEAM1, TEAM2 FROM MATCHES WHERE MATCH_START_DATE>=CURRENT_TIMESTAMP ";
+	public List<MatchesDTO> getMatches() {
+		String sql = "SELECT unique_id, DATE_FORMAT(datetime, '%Y-%m-%d') date, DATE_FORMAT(datetime,'%H:%i:%s') time, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted, matchLive FROM MATCHES";
 		// AND MATCH_START_TIME>=CURRENT_TIME
-		List<MatchDTO> matches = getJdbcTemplate().query(sql, new Object[] {},
-				new BeanPropertyRowMapper<MatchDTO>(MatchDTO.class));
+		List<MatchesDTO> matches = getJdbcTemplate().query(sql, new Object[] {},
+				new BeanPropertyRowMapper<MatchesDTO>(MatchesDTO.class));
 		return matches;
 	}
 

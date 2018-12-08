@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
-import com.waio.model.MatchDTO;
 import com.waio.model.PlayerSquadDTO;
 import com.waio.service.IMatchService;
 
@@ -18,7 +18,7 @@ public class MatchService implements IMatchService{
 	IMatchDao matchDao;
 	
 	@Override
-	public List<MatchDTO> getMatches() {
+	public List<MatchesDTO> getMatches() {
 		return matchDao.getMatches();
 	}
 
