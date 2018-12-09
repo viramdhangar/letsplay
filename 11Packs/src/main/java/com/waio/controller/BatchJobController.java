@@ -16,7 +16,7 @@ public class BatchJobController {
 	@Autowired
 	private IBatchJobService batchJobService;
 	
-	@GetMapping("/matchesAPI")
+	@GetMapping("/1.0/matchesAPI")
 	public NewMatchesData matchesAPI() {
 		return batchJobService.insertNewMatches();
 	}

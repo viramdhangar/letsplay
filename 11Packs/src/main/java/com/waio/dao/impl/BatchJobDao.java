@@ -1,5 +1,6 @@
 package com.waio.dao.impl;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,15 +40,15 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 		
 		String sql = "insert into matches (unique_id, date, datetime, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE date=?, datetime=?, team1=?, team2=?, type=?, squad=?, toss_winner_team=?, winner_team=?, matchStarted=?";
 		
-		int[] insertedMatches = getJdbcTemplate().batchUpdate(sql,
+/*		int[] insertedMatches = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
 	                public void setValues(PreparedStatement ps, int i)
 	                        throws SQLException {
 	                    MatchesDTO match = matchesList.get(i);
 	                    ps.setString(1, match.getUnique_id());
-	                    ps.setDate(2, match.getDate());
-	                    ps.setDate(3, match.getDatetime());
+	                    ps.setDate(2, (Date) match.getDate());
+	                    ps.setDate(3, (Date) match.getDatetime());
 	                    ps.setString(4, match.getTeam1());
 	                    ps.setString(5, match.getTeam2());
 	                    ps.setString(6, match.getType());
@@ -56,8 +57,8 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                    ps.setString(9, match.getWinner_team());
 	                    ps.setString(10, match.getMatchStarted());
 	                    
-	                    ps.setDate(11, match.getDate());
-	                    ps.setDate(12, match.getDatetime());
+	                    ps.setDate(11, (Date) match.getDate());
+	                    ps.setDate(12, (Date) match.getDatetime());
 	                    ps.setString(13, match.getTeam1());
 	                    ps.setString(14, match.getTeam2());
 	                    ps.setString(15, match.getType());
@@ -71,10 +72,34 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                public int getBatchSize() {
 	                    return matchesList.size();
 	                }
-	            });
-		return insertedMatches.length;
-
+	            });*/
+		for(MatchesDTO match : matchesList) {
+		getJdbcTemplate().update(sql, new Object[] {
+			    match.getUnique_id(),
+                match.getDate(),
+                match.getDatetime(),
+                match.getTeam1(),
+                match.getTeam2(),
+                match.getType(),
+                match.getSquad(),
+                match.getToss_winner_team(),
+                match.getWinner_team(),
+                match.getMatchStarted(),
+                
+                match.getDate(),
+                match.getDatetime(),
+                match.getTeam1(),
+                match.getTeam2(),
+                match.getType(),
+                match.getSquad(),
+                match.getToss_winner_team(),
+                match.getWinner_team(),
+                match.getMatchStarted()
+		});
+		}
+		return matchesList.size();
 	}
+	
 
 	@Override
 	public int insertSquad(final String uniqueId, final TeamSquad teamSquad) {

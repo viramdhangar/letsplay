@@ -47,7 +47,7 @@ public class BatchJobService implements IBatchJobService{
 		
 		while(it.hasNext()) {
 			MatchesDTO matches = it.next();
-			if((matches.getDate().equals(today) || matches.getDate().after(today)) && matches.getDate().before(today2)) {
+			if((matches.getDatetime().equals(today) || matches.getDatetime().after(today)) && matches.getDatetime().before(today2)) {
 				
 			}else {
 				it.remove();

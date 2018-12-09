@@ -28,7 +28,7 @@ public class MatchController {
 	@Autowired
 	IMatchService matchService;
 	
-	@GetMapping("/matches")
+	@GetMapping("/1.0/matches")
 	public List<MatchesDTO> getMatches() {
 		List<MatchesDTO> matches = new ArrayList<MatchesDTO>();
 		matches = matchService.getMatches();
@@ -36,7 +36,7 @@ public class MatchController {
 	}
 	
 
-	@RequestMapping(value="/leagues/{matchId}", produces = {"application/JSON"})
+	@RequestMapping(value="/1.0/leagues/{matchId}", produces = {"application/JSON"})
 	public LeaguesResponse getLeagues(@PathVariable int matchId) {
 		LeaguesResponse leaguesRes = new LeaguesResponse();
 		List<LeagueDTO> leagues = new ArrayList<LeagueDTO>();
@@ -46,7 +46,7 @@ public class MatchController {
 		return leaguesRes;
 	}
 
-	@RequestMapping(value="/squad/{matchId}", produces = {"application/JSON"})
+	@RequestMapping(value="/1.0/squad/{matchId}", produces = {"application/JSON"})
 	public SquedResponse getSquad(@PathVariable int matchId) {
 		SquedResponse sRes = new SquedResponse();
 		List<PlayerSquadDTO> squad = new ArrayList<PlayerSquadDTO>();

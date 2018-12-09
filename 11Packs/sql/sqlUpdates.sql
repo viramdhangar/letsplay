@@ -16,3 +16,5 @@ CREATE TABLE matches (
 
 ALTER TABLE matches
 ADD PRIMARY KEY(unique_id);
+
+ALTER TABLE player MODIFY nation varchar(50);
