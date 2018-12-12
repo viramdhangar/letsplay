@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysql.cj.util.StringUtils;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.cricapi.NewMatchesData;
 import com.waio.cricapi.TeamSquad;
@@ -59,6 +60,11 @@ public class BatchJobService implements IBatchJobService{
 			List<LeagueDTO> leagueList = batchJobDao.getLeagues();
 			List<MatchesLeagues> matchesLeagesList = new ArrayList<MatchesLeagues>();
 			for(MatchesDTO matches : matchesList) {
+				
+				if(StringUtils.isNullOrEmpty(matches.getUnique_id()) || StringUtils.isNullOrEmpty(matches.getType()) || StringUtils.isNullOrEmpty(matches.getTeam1()) || StringUtils.isNullOrEmpty(matches.getTeam2()) || matches.getDatetime()==null) {
+					continue;
+				}
+				
 				insertSquad(matches.getUnique_id());
 				
 				for(LeagueDTO league : leagueList) {
