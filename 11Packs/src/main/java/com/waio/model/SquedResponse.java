@@ -4,19 +4,18 @@ import java.util.List;
 
 public class SquedResponse {
 
-	private List<PlayerSquadDTO> players; 
+	private List<PlayerDTO> players; 
 	private int matchId;
-	
 	/**
 	 * @return the players
 	 */
-	public List<PlayerSquadDTO> getPlayers() {
+	public List<PlayerDTO> getPlayers() {
 		return players;
 	}
 	/**
 	 * @param players the players to set
 	 */
-	public void setPlayers(List<PlayerSquadDTO> players) {
+	public void setPlayers(List<PlayerDTO> players) {
 		this.players = players;
 	}
 	public int getMatchId() {

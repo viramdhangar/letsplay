@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
+import com.waio.model.PlayerDTO;
 import com.waio.model.PlayerSquadDTO;
 
 @Repository("MatchDao")
@@ -47,10 +48,10 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 	}
 
 	@Override
-	public List<PlayerSquadDTO> getSquad(int matchId) {
-		String sql = "select p.id, p.player, p.type, p.nation, p.credit from player p, match_squad s where s.match_id=? and s.player_id=p.id order by p.type ";
-		List<PlayerSquadDTO> leagues = getJdbcTemplate().query(sql, new Object[] { matchId },
-				new BeanPropertyRowMapper<PlayerSquadDTO>(PlayerSquadDTO.class));
+	public List<PlayerDTO> getSquad(int matchId) {
+		String sql = "select p.pid, p.name, p.imageURL, p.playingRole, p.country, p.credit, p.major_teams, p.current_age, p.born, p.battingStyle, p.bowlingStyle from player p, match_squad s where s.match_id=? and s.player_id=p.pid order by p.playingRole";
+		List<PlayerDTO> leagues = getJdbcTemplate().query(sql, new Object[] { matchId },
+				new BeanPropertyRowMapper<PlayerDTO>(PlayerDTO.class));
 		return leagues;
 	}
 

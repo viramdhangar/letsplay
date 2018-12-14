@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
+import com.waio.model.PlayerDTO;
 import com.waio.model.PlayerSquadDTO;
 import com.waio.service.IMatchService;
 
@@ -27,7 +28,7 @@ public class MatchService implements IMatchService{
 		return matchDao.getLeagues(matchId);
 	}
 	@Override
-	public List<PlayerSquadDTO> getSquad(int matchId) {
+	public List<PlayerDTO> getSquad(int matchId) {
 		return matchDao.getSquad(matchId);
 	}
 

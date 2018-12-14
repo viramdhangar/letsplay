@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.model.LeagueDTO;
 import com.waio.model.LeaguesResponse;
+import com.waio.model.PlayerDTO;
 import com.waio.model.PlayerSquadDTO;
 import com.waio.model.ProfileDTO;
 import com.waio.model.SquedResponse;
@@ -49,7 +50,7 @@ public class MatchController {
 	@RequestMapping(value="/1.0/squad/{matchId}", produces = {"application/JSON"})
 	public SquedResponse getSquad(@PathVariable int matchId) {
 		SquedResponse sRes = new SquedResponse();
-		List<PlayerSquadDTO> squad = new ArrayList<PlayerSquadDTO>();
+		List<PlayerDTO> squad = new ArrayList<PlayerDTO>();
 		squad = matchService.getSquad(matchId);
 		sRes.setPlayers(squad);
 		sRes.setMatchId(matchId);

@@ -22,6 +22,7 @@ import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchesLeagues;
+import com.waio.model.PlayerDTO;
 import com.waio.model.PlayerSquadDTO;
 
 @Repository("BatchJobDao")
@@ -102,74 +103,55 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	
 
 	@Override
-	public int insertSquad(final String uniqueId, final TeamSquad teamSquad) {
-		String sql = "insert into match_squad (match_id, player_id) values (?, ?)";
-		final List<Players> players = new ArrayList<Players>();
-		List<PlayerSquadDTO> psDTOList = new ArrayList<PlayerSquadDTO>();
-		for(Team team : teamSquad.getSquad()){
-			players.addAll(team.getPlayers());
-			setPlayerInfo(psDTOList, team);
-		}
-		
-		insertPlayerInfo(psDTOList);
+	public int insertSquad(final String uniqueId, final List<PlayerDTO> playerList) {
+		String sql = "insert into match_squad (match_id, player_id) values (?, ?)";		
 		
 		int[] insertedPlayers = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
 	                public void setValues(PreparedStatement ps, int i)
 	                        throws SQLException {
-	                	Players player = players.get(i);
+	                	PlayerDTO player = playerList.get(i);
 	                    ps.setString(1, uniqueId);
 	                    ps.setString(2, player.getPid());
 	                }
 
 	                @Override
 	                public int getBatchSize() {
-	                    return players.size();
+	                    return playerList.size();
 	                }
 	            });
 		return insertedPlayers.length;
 	}
-
-	/**
-	 * @param psDTOList
-	 * @param team
-	 */
-	private void setPlayerInfo(List<PlayerSquadDTO> psDTOList, Team team) {
-		for(Players player : team.getPlayers()) {
-			PlayerSquadDTO psDTO = new PlayerSquadDTO();
-			psDTO.setId(player.getPid());
-			psDTO.setPlayer(player.getName());
-			psDTO.setCredit(9);
-			psDTO.setNation(team.getName());
-			psDTO.setType("Cric");
-			psDTOList.add(psDTO);
-		}
-	}
 	
-	public int insertPlayerInfo(final List<PlayerSquadDTO> psDTOList) {
-		String sql = "insert into player (id, player, nation, credit, type) values (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE player=?, nation=?, credit=?, type=?";
+	@Override
+	public int insertPlayerInfo(final List<PlayerDTO> playerList) {
+		String sql = "insert into player (pid, name, imageURL, country, playingRole, credit, major_teams, current_age, born, battingStyle, bowlingStyle) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=?, imageURL=?";
 		int[] insertedPlayers = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
 	                public void setValues(PreparedStatement ps, int i)
 	                        throws SQLException {
-	                	PlayerSquadDTO player = psDTOList.get(i);
-	                    ps.setString(1, player.getId());
-	                    ps.setString(2, player.getPlayer());
-	                    ps.setString(3, player.getNation());
-	                    ps.setInt(4, player.getCredit());
-	                    ps.setString(5, player.getType());
+	                	PlayerDTO player = playerList.get(i);
+	                    ps.setString(1, player.getPid());
+	                    ps.setString(2, player.getName());
+	                    ps.setString(3, player.getImageURL());
+	                    ps.setString(4, player.getCountry());
+	                    ps.setString(5, player.getPlayingRole());
+	                    ps.setString(6, player.getCredit());
+	                    ps.setString(7, player.getMajorTeams());
+	                    ps.setString(8, player.getCurrentAge());
+	                    ps.setString(9, player.getBorn());
+	                    ps.setString(10, player.getBattingStyle());
+	                    ps.setString(11, player.getBowlingStyle());
 	                    
-	                    ps.setString(6, player.getPlayer());
-	                    ps.setString(7, player.getNation());
-	                    ps.setInt(8, player.getCredit());
-	                    ps.setString(9, player.getType());
+	                    ps.setString(12, player.getName());
+	                    ps.setString(13, player.getImageURL());
 	                }
 
 	                @Override
 	                public int getBatchSize() {
-	                    return psDTOList.size();
+	                    return playerList.size();
 	                }
 	            });
 		return insertedPlayers.length;

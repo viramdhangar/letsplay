@@ -10,14 +10,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import com.mysql.cj.util.StringUtils;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.cricapi.NewMatchesData;
+import com.waio.cricapi.Players;
+import com.waio.cricapi.Team;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchesLeagues;
+import com.waio.model.PlayerDTO;
 import com.waio.service.IBatchJobService;
 import com.waio.service.ICricApiService;
 
@@ -49,7 +52,9 @@ public class BatchJobService implements IBatchJobService{
 		while(it.hasNext()) {
 			MatchesDTO matches = it.next();
 			if((matches.getDatetime().equals(today) || matches.getDatetime().after(today)) && matches.getDatetime().before(today2)) {
-				
+				if(StringUtils.isEmpty(matches.getUnique_id()) || StringUtils.isEmpty(matches.getType()) || StringUtils.isEmpty(matches.getTeam1()) || StringUtils.isEmpty(matches.getTeam2()) || matches.getDatetime()==null) {
+					it.remove();
+				}
 			}else {
 				it.remove();
 			}
@@ -60,12 +65,11 @@ public class BatchJobService implements IBatchJobService{
 			List<LeagueDTO> leagueList = batchJobDao.getLeagues();
 			List<MatchesLeagues> matchesLeagesList = new ArrayList<MatchesLeagues>();
 			for(MatchesDTO matches : matchesList) {
-				
-				if(StringUtils.isNullOrEmpty(matches.getUnique_id()) || StringUtils.isNullOrEmpty(matches.getType()) || StringUtils.isNullOrEmpty(matches.getTeam1()) || StringUtils.isNullOrEmpty(matches.getTeam2()) || matches.getDatetime()==null) {
+				if(matches.getSquad().equalsIgnoreCase("false")) {
+					System.out.println("Squad not present := "+matches.getUnique_id());
 					continue;
 				}
-				
-				insertSquad(matches.getUnique_id());
+				insertSquad(matches);
 				
 				for(LeagueDTO league : leagueList) {
 					MatchesLeagues matchLeague = new MatchesLeagues();
@@ -84,12 +88,72 @@ public class BatchJobService implements IBatchJobService{
 		}
 	}
 
-	public int insertSquad(String uniqueId) {
-		TeamSquad teamSquad = cricApiService.getSquad(uniqueId);
-		return batchJobDao.insertSquad(uniqueId, teamSquad);
+	public int insertSquad(MatchesDTO matches) {
+		try {
+		TeamSquad teamSquad = cricApiService.getSquad(matches.getUnique_id());
+		List<PlayerDTO> playerList = insertPlayerInfo(teamSquad, matches);
+		// insert player information
+		batchJobDao.insertPlayerInfo(playerList);
+		// insert match squad
+		int insertedRecords = batchJobDao.insertSquad(matches.getUnique_id(), playerList);
+		return insertedRecords;
+		}catch(Exception e) {
+			System.out.println(e);
+			return 0;
+		}
 	}
 	
 	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
 		return batchJobDao.insertLeagues(matchesLeagesList);
+	}
+	
+	public List<PlayerDTO> insertPlayerInfo(TeamSquad teamSquad, MatchesDTO matches) {
+		List<PlayerDTO> playerList = new ArrayList<PlayerDTO>();
+		for(Team team : teamSquad.getSquad()) {
+			for(Players player : team.getPlayers()) {
+				PlayerDTO playerDTO = cricApiService.playerInfo(player.getPid());	
+				if(playerDTO!=null) {
+					if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Bowler")){
+						playerDTO.setPlayingRole("BOWL");
+					} else if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Allrounder")){
+						playerDTO.setPlayingRole("ALL");
+					} else if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Wicketkeeper")){
+						playerDTO.setPlayingRole("WK");
+					} else {
+						playerDTO.setPlayingRole("BAT");
+					}
+					if(matches.getType().equalsIgnoreCase("Twenty20")  && playerDTO.getData().getBowling().getT20Is()!=null) {
+						if(playerDTO.getPlayingRole().contains("BOWL")){
+							if(playerDTO.getData().getBowling().getT20Is().getAve()<20) {
+								playerDTO.setCredit("9.5");
+							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>=20 && playerDTO.getData().getBatting().getT20Is().getAve()==24.99) {
+								playerDTO.setCredit("9");
+							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>25 && playerDTO.getData().getBatting().getT20Is().getAve()<=29.99) {
+								playerDTO.setCredit("8.5");
+							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>30) {
+								playerDTO.setCredit("8");
+							}
+						} else {
+							if(playerDTO.getData().getBatting().getT20Is().getAve()>50) {
+								playerDTO.setCredit("10");
+							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>35 && playerDTO.getData().getBatting().getT20Is().getAve()<=49.99) {
+								playerDTO.setCredit("9.5");
+							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>25 && playerDTO.getData().getBatting().getT20Is().getAve()<=34.99) {
+								playerDTO.setCredit("9");
+							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>15 && playerDTO.getData().getBatting().getT20Is().getAve()<=24.99) {
+								playerDTO.setCredit("8.5");
+							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>0 && playerDTO.getData().getBatting().getT20Is().getAve()<=14.99) {
+								playerDTO.setCredit("8");
+							}						
+						}
+					}else {
+						playerDTO.setCredit("9");
+					}
+				}
+				playerList.add(playerDTO);
+			}
+		}
+		
+	return playerList;
 	}
 }

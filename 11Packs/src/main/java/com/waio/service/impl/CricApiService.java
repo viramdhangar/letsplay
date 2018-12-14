@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.waio.cricapi.NewMatchesData;
 import com.waio.cricapi.TeamSquad;
+import com.waio.model.PlayerDTO;
 import com.waio.service.ICricApiService;
 
 /**
@@ -40,6 +41,19 @@ public class CricApiService implements ICricApiService {
 			TeamSquad result = restTemplate.getForObject(uri, TeamSquad.class);
 
 			System.out.println(result);
+			return result;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return null;
+		}
+	}
+	
+	@Override
+	public PlayerDTO playerInfo(String id) {
+		final String uri = "https://cricapi.com/api/playerStats?apikey=VC60hvq1q4N0UK2m0gZwyTfvcl92&pid="+id+"";
+		RestTemplate restTemplate = new RestTemplate();
+		try {
+			PlayerDTO result = restTemplate.getForObject(uri, PlayerDTO.class);
 			return result;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());

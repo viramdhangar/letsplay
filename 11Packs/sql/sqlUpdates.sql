@@ -1,20 +1,15 @@
-drop table matches;
+drop table player;
 
-CREATE TABLE matches (
-    unique_id VARCHAR(20) NOT NULL,
-    date DATE NOT NULL,
-    datetime DATETIME NOT NULL,
-    team1 VARCHAR(50) NOT NULL,
-    team2 VARCHAR(50) NOT NULL,
-    type VARCHAR(20) NOT NULL,
-    squad VARCHAR(20),
-    toss_winner_team VARCHAR(50),
-    winner_team VARCHAR(50),
-    matchStarted VARCHAR(20),
-    matchLive VARCHAR(20)
+CREATE TABLE player (
+    pid VARCHAR(20) NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+	imageURL VARCHAR(200),
+    country VARCHAR(50) NOT NULL,
+    playingRole VARCHAR(60) DEFAULT 'BAT',
+    credit VARCHAR(10) DEFAULT '8',
+    major_teams VARCHAR(500),
+    current_age VARCHAR(50),
+    born VARCHAR(100),
+    battingStyle VARCHAR(50),
+    bowlingStyle VARCHAR(100)
 );
-
-ALTER TABLE matches
-ADD PRIMARY KEY(unique_id);
-
-ALTER TABLE player MODIFY nation varchar(50);
