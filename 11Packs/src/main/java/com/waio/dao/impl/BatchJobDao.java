@@ -1,9 +1,7 @@
 package com.waio.dao.impl;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -16,14 +14,10 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.waio.cricapi.MatchesDTO;
-import com.waio.cricapi.Players;
-import com.waio.cricapi.Team;
-import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerDTO;
-import com.waio.model.PlayerSquadDTO;
 
 @Repository("BatchJobDao")
 public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
@@ -104,7 +98,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 
 	@Override
 	public int insertSquad(final String uniqueId, final List<PlayerDTO> playerList) {
-		String sql = "insert into match_squad (match_id, player_id) values (?, ?)";		
+		String sql = "insert into match_squad (match_id, player_id) values (?, ?) ON DUPLICATE KEY update player_id=?";		
 		
 		int[] insertedPlayers = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
@@ -114,6 +108,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                	PlayerDTO player = playerList.get(i);
 	                    ps.setString(1, uniqueId);
 	                    ps.setString(2, player.getPid());
+	                    ps.setString(3, player.getPid());
 	                }
 
 	                @Override
@@ -165,7 +160,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	
 	@Override
 	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
-		String sql = "insert into match_league (match_id, league_id) values (?, ?)";
+		String sql = "insert into match_league (match_id, league_id) values (?, ?) ON DUPLICATE KEY update league_id=? ";
 		int[] insertedLeagues = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
@@ -174,6 +169,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                	MatchesLeagues matchesLeague = matchesLeagesList.get(i);
 	                    ps.setString(1, matchesLeague.getMatchId());
 	                    ps.setString(2, matchesLeague.getLeagueId());
+	                    ps.setString(3, matchesLeague.getLeagueId());
 	                }
 
 	                @Override

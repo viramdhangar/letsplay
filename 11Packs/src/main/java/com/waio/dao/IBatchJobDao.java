@@ -6,7 +6,6 @@ package com.waio.dao;
 import java.util.List;
 
 import com.waio.cricapi.MatchesDTO;
-import com.waio.cricapi.TeamSquad;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerDTO;

@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 
 import com.waio.cricapi.MatchesDTO;
 import com.waio.cricapi.NewMatchesData;
-import com.waio.cricapi.Players;
 import com.waio.cricapi.Team;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
@@ -110,7 +109,7 @@ public class BatchJobService implements IBatchJobService{
 	public List<PlayerDTO> insertPlayerInfo(TeamSquad teamSquad, MatchesDTO matches) {
 		List<PlayerDTO> playerList = new ArrayList<PlayerDTO>();
 		for(Team team : teamSquad.getSquad()) {
-			for(Players player : team.getPlayers()) {
+			for(PlayerDTO player : team.getPlayers()) {
 				PlayerDTO playerDTO = cricApiService.playerInfo(player.getPid());	
 				if(playerDTO!=null) {
 					if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Bowler")){

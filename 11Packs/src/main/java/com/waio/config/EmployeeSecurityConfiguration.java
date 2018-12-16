@@ -35,7 +35,7 @@ public class EmployeeSecurityConfiguration extends WebSecurityConfigurerAdapter 
 		.antMatchers("/api/job/1.0/matchesAPI").permitAll()
 		.antMatchers("/api/1.0/leagues/*").permitAll()
 		.antMatchers("/api/1.0/squad/*").permitAll()
-		.antMatchers("/api/createSquad/*/*").permitAll()
+		.antMatchers("/api/createSquad").permitAll()
 		.antMatchers("/welcome").hasAnyRole("USER", "ADMIN")
 		.antMatchers("/getEmployees").hasAnyRole("USER", "ADMIN")
 		.antMatchers("/addNewEmployee").hasAnyRole("ADMIN")

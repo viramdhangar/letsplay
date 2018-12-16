@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
+import com.waio.model.MatchTeam;
 import com.waio.model.PlayerDTO;
-import com.waio.model.PlayerSquadDTO;
 
 @Repository("MatchDao")
 public class MatchDao extends JdbcDaoSupport implements IMatchDao {
@@ -56,39 +56,40 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 	}
 
 	@Override
-	public List<PlayerSquadDTO> createTeam(final List<PlayerSquadDTO> teamList, int matchId, String teamName, int profileId) {
+	public int createTeam(MatchTeam team) {
 		// insert team name
-		int teamId = insertTeam(teamName, profileId);
+		long teamId = insertTeam(team);
 		// create team
 		String sql = "insert into team_player (team_id, player_id) values (?, ?)";
-		getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+		int[] insertedRecords = getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				PlayerSquadDTO players = teamList.get(i);
-				ps.setInt(1, teamId);
-				ps.setString(2, players.getId());
+				PlayerDTO players = team.getPlayers().get(i);
+				ps.setLong(1, teamId);
+				ps.setString(2, players.getPid());
 			}
 
 			@Override
 			public int getBatchSize() {
 				// TODO Auto-generated method stub
-				return teamList.size();
+				return team.getPlayers().size();
 			}
-		});
-		// add team with user
-		String sqlUser = "insert into profile_match_team (profile_id, match_id, team_id) values (?, ?, ?)";
-		getJdbcTemplate().update(sqlUser, new Object[] { profileId, matchId, teamId });
-
-		// get all teams of match
-		String getTeamSql = "select team.id teamId, team.team_name, player.id, player.player, player.type, player.nation, player.credit from team_player tp, profile_match_team pmt, player, team where tp.team_id=pmt.team_id and pmt.profile_id=? and match_id=? and tp.player_id=player.id and team.id=tp.team_id";
-		return getJdbcTemplate().query(getTeamSql, new Object[] { profileId, matchId },
-				new BeanPropertyRowMapper<PlayerSquadDTO>(PlayerSquadDTO.class));
+		});		
+		return insertedRecords.length;
 	}
 
 	@Override
-	public int insertTeam(String teamName, int profileId) {
-		String sql = "insert into team (team_name, created, createdid) values (?, current_timestamp, ?)";
-		getJdbcTemplate().update(sql, new Object[] { teamName, profileId });
-		return getJdbcTemplate().queryForObject("select LAST_INSERT_ID()", Integer.class);
+	public long insertTeam(MatchTeam matchTeam) {
+		String sql = "insert into team (id, name, match_id, created_id) values (?, ?, ?, ?)";
+		long teamId = getTeamSequence();
+		getJdbcTemplate().update(sql, new Object[] { teamId, matchTeam.getTeamName(), matchTeam.getMatchId(), matchTeam.getUniqueNumber() });
+		return teamId;
+	}
+
+	@Override
+	public long getTeamSequence() {
+		String sql = "select max(id) from team";
+		long teamId = getJdbcTemplate().queryForObject(sql, Long.class);
+		return teamId+1;
 	}
 }

@@ -23,7 +23,58 @@ public class MatchesDTO {
 	private String toss_winner_team;
 	private String winner_team;
 	private String matchStarted;
-	
+	private String team1Short;
+	private String team2Short;
+	private String typeShort;
+	private String formattedTeamName;	
+	/**
+	 * @return the formattedTeamName
+	 */
+	public String getFormattedTeamName() {
+		return formattedTeamName;
+	}
+	/**
+	 * @param formattedTeamName the formattedTeamName to set
+	 */
+	public void setFormattedTeamName(String formattedTeamName) {
+		this.formattedTeamName = formattedTeamName;
+	}
+	/**
+	 * @return the typeShort
+	 */
+	public String getTypeShort() {
+		return typeShort;
+	}
+	/**
+	 * @param typeShort the typeShort to set
+	 */
+	public void setTypeShort(String typeShort) {
+		this.typeShort = typeShort;
+	}
+	/**
+	 * @return the team1Short
+	 */
+	public String getTeam1Short() {
+		return team1Short;
+	}
+	/**
+	 * @param team1Short the team1Short to set
+	 */
+	public void setTeam1Short(String team1Short) {
+		this.team1Short = team1Short;
+	}
+	/**
+	 * @return the team2Short
+	 */
+	public String getTeam2Short() {
+		return team2Short;
+	}
+	/**
+	 * @param team2Short the team2Short to set
+	 */
+	public void setTeam2Short(String team2Short) {
+		this.team2Short = team2Short;
+	}
 	public String getUnique_id() {
 		return unique_id;
 	}

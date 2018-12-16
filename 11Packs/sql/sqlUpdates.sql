@@ -1,15 +1,20 @@
-drop table player;
+drop table profile_match_team;
 
-CREATE TABLE player (
-    pid VARCHAR(20) NOT NULL PRIMARY KEY,
+CREATE TABLE team (
+    id VARCHAR(20) NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-	imageURL VARCHAR(200),
-    country VARCHAR(50) NOT NULL,
-    playingRole VARCHAR(60) DEFAULT 'BAT',
-    credit VARCHAR(10) DEFAULT '8',
-    major_teams VARCHAR(500),
-    current_age VARCHAR(50),
-    born VARCHAR(100),
-    battingStyle VARCHAR(50),
-    bowlingStyle VARCHAR(100)
+    match_id VARCHAR(20) NOT NULL,
+    created_id VARCHAR(20) NOT NULL,
+    created datetime DEFAULT CURRENT_TIMESTAMP
 );
+
+
+ALTER TABLE match_squad
+ADD CONSTRAINT UC_MATCH_SQUAD UNIQUE (match_id,player_id);
+
+
+ALTER TABLE match_league
+ADD CONSTRAINT UC_MATCH_League UNIQUE (match_id,league_id);
+
+
+

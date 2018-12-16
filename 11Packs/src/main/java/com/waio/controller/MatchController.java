@@ -2,6 +2,7 @@ package com.waio.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.model.LeagueDTO;
 import com.waio.model.LeaguesResponse;
+import com.waio.model.MatchTeam;
 import com.waio.model.PlayerDTO;
-import com.waio.model.PlayerSquadDTO;
-import com.waio.model.ProfileDTO;
 import com.waio.model.SquedResponse;
 import com.waio.service.IMatchService;
 
@@ -57,12 +57,9 @@ public class MatchController {
 		return sRes;
 	}
 	
-	@PostMapping(value="/createSquad/{matchId}/{teamName}", produces = {"application/JSON"})
-	public @ResponseBody List<PlayerSquadDTO> createSquad(@PathVariable int matchId, @PathVariable String teamName, @RequestBody List<PlayerSquadDTO> body) {
-		ProfileDTO profile = new ProfileDTO();
-		profile.setId(1000);
-		System.out.println(body);
-		List<PlayerSquadDTO> createTeam = matchService.createTeam(body, matchId, teamName, profile.getId());
-		return createTeam;
+	@PostMapping(value="/createSquad")
+	public @ResponseBody String createSquad(@RequestBody MatchTeam matchTeam) {
+		String inserted = matchService.createTeam(matchTeam);
+		return inserted;
 	}
 }
