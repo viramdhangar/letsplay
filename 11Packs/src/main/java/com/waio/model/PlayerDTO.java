@@ -24,7 +24,20 @@ public class PlayerDTO {
     private String born;
     private String battingStyle;
     private String bowlingStyle;
+    private String selected;
     private PlayerProfileInfo data;
+	/**
+	 * @return the selected
+	 */
+	public String getSelected() {
+		return selected;
+	}
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(String selected) {
+		this.selected = selected;
+	}
 	/**
 	 * @return the pid
 	 */

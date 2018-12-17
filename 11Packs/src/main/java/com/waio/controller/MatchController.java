@@ -57,9 +57,38 @@ public class MatchController {
 		return sRes;
 	}
 	
-	@PostMapping(value="/createSquad")
+	@PostMapping(value="/1.0/createSquad")
 	public @ResponseBody String createSquad(@RequestBody MatchTeam matchTeam) {
 		String inserted = matchService.createTeam(matchTeam);
 		return inserted;
+	}
+	
+	@GetMapping(value="/1.0/allMatchesTeams/{uniqueNumber}")
+	public @ResponseBody List<MatchTeam> getAllMatchesTeams(@PathVariable String uniqueNumber) {
+		List<MatchTeam> matchTeam = matchService.getCreatedTeams(uniqueNumber);
+		return matchTeam;
+	}
+	
+	@GetMapping(value="/1.0/teamsOfMatch/{uniqueNumber}/{matchId}")
+	public @ResponseBody List<MatchTeam> teamsOfMatch(@PathVariable String uniqueNumber, @PathVariable String matchId) {
+		List<MatchTeam> matchTeam = matchService.getCreatedTeamsOfMatch(uniqueNumber, matchId);
+		return matchTeam;
+	}
+	
+	@GetMapping(value="/1.0/teamView/{uniqueNumber}/{matchId}/{teamId}")
+	public @ResponseBody MatchTeam getTeamView(@PathVariable String uniqueNumber, @PathVariable String matchId, @PathVariable String teamId) {
+		MatchTeam matchTeam = matchService.getTeam(uniqueNumber, matchId, teamId);
+		return matchTeam;
+	}
+	
+	@RequestMapping(value="/1.0/teamEdit/{uniqueNumber}/{matchId}/{teamId}", produces = {"application/JSON"})
+	public SquedResponse getSquad(@PathVariable String uniqueNumber, @PathVariable String matchId, @PathVariable String teamId) {
+		SquedResponse sRes = new SquedResponse();
+		List<PlayerDTO> squad = new ArrayList<PlayerDTO>();
+		MatchTeam matchTeam = matchService.getTeam(uniqueNumber, matchId, teamId);
+		squad = matchService.setSelectedPlayersInSquad(matchService.getSquad(Integer.parseInt(matchId)), matchTeam);
+		sRes.setPlayers(squad);
+		sRes.setMatchId(Integer.parseInt(matchId));
+		return sRes;
 	}
 }

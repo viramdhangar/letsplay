@@ -2,6 +2,7 @@ package com.waio.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
+import com.waio.model.MatchTeamBean;
 import com.waio.model.PlayerDTO;
 import com.waio.service.IMatchService;
 
@@ -114,5 +116,55 @@ public class MatchService implements IMatchService{
 			str = "There should be 11 players in the team.";
 		}
 		return str;
+	}
+
+	@Override
+	public List<MatchTeam> getCreatedTeams(String uniqueNumber) {
+		return matchDao.getCreatedTeams(uniqueNumber);
+	}
+
+	@Override
+	public List<MatchTeam> getCreatedTeamsOfMatch(String uniqueNumber, String matchId) {
+		return matchDao.getCreatedTeamsOfMatch(uniqueNumber, matchId);
+	}
+	
+	@Override
+	public MatchTeam getTeam(String uniqueNumber, String matchId, String teamId) {
+		List<MatchTeamBean> team = matchDao.getTeam(uniqueNumber, matchId, teamId);
+		return setValuesInMatchTeam(team, uniqueNumber, matchId, teamId);
+	}
+	
+	public MatchTeam setValuesInMatchTeam(List<MatchTeamBean> team, String uniqueNumber, String matchId, String teamId){	
+		MatchTeam matchTeam = new MatchTeam();
+		List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		for(MatchTeamBean matchBean : team) {
+			PlayerDTO playerDTO = new PlayerDTO();
+			playerDTO.setPid(matchBean.getPid());
+			playerDTO.setName(matchBean.getName());
+			playerDTO.setPlayingRole(matchBean.getPlayingRole());
+			playerDTO.setCredit(matchBean.getCredit());
+			playerDTO.setImageURL(matchBean.getImageURL());
+			playerDTO.setCountry(matchBean.getCountry());
+			players.add(playerDTO);
+		}
+		matchTeam.setId(teamId);
+		if(team.size()>0) {
+			matchTeam.setTeamName(team.get(0).getTeamName());
+		}
+		matchTeam.setMatchId(matchId);
+		matchTeam.setUniqueNumber(uniqueNumber);
+		matchTeam.setPlayers(players);
+		return matchTeam;
+	}
+
+	@Override
+	public List<PlayerDTO> setSelectedPlayersInSquad(List<PlayerDTO> squad, MatchTeam matchTeam) {
+		List<String> playerIds = new ArrayList<String>(); //   MatchTeam matchTeam
+		for(PlayerDTO squa : squad) {
+			if(playerIds.contains(squa.getPid())) {
+				squa.setSelected("Y");
+			}
+		}
+		return squad;
 	}
 }

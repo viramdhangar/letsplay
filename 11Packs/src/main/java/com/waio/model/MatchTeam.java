@@ -10,10 +10,23 @@ import java.util.List;
  *
  */
 public class MatchTeam {
+	private String id;
 	private String teamName;
 	private List<PlayerDTO> players;
 	private String matchId;
 	private String uniqueNumber;
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 	/**
 	 * @return the teamName
 	 */

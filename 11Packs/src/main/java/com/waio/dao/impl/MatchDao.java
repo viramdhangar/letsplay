@@ -3,6 +3,7 @@ package com.waio.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -17,6 +18,7 @@ import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
+import com.waio.model.MatchTeamBean;
 import com.waio.model.PlayerDTO;
 
 @Repository("MatchDao")
@@ -91,5 +93,25 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 		String sql = "select max(id) from team";
 		long teamId = getJdbcTemplate().queryForObject(sql, Long.class);
 		return teamId+1;
+	}
+	
+	@Override
+	public List<MatchTeam> getCreatedTeams(String uniqueNumber){
+		String sql = "select team.id, team.name teamName, team.match_id from team where team.created_id=? order by team.id";
+		List<MatchTeam> teamList = getJdbcTemplate().query(sql, new Object[] {uniqueNumber}, new BeanPropertyRowMapper<MatchTeam>(MatchTeam.class));
+		return teamList;
+	}
+	
+	public List<MatchTeam> getCreatedTeamsOfMatch(String uniqueNumber, String matchId){
+		String sql = "select distinct team.id, team.name teamName, team.match_id from team where team.created_id=? and team.match_id=? order by team.id";
+		List<MatchTeam> teamList = getJdbcTemplate().query(sql, new Object[] {uniqueNumber, matchId}, new BeanPropertyRowMapper<MatchTeam>(MatchTeam.class));
+		return teamList;
+	}
+
+	@Override
+	public List<MatchTeamBean> getTeam(String uniqueNumber, String matchId, String teamId) {
+		String sql = "select team.id, team.name teamName, team.match_id, p.pid, p.name, p.playingRole, p.credit, p.imageURL, p.country from team, team_player tp, player p where team.id=? and team.id=tp.team_id and tp.player_id = p.pid order by team.id";
+		List<MatchTeamBean> team = getJdbcTemplate().query(sql, new Object[] { teamId }, new BeanPropertyRowMapper<MatchTeamBean>(MatchTeamBean.class));
+		return team;
 	}
 }
