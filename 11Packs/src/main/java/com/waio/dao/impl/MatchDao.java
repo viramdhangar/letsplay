@@ -5,32 +5,28 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
+import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
+import com.waio.model.JoinLeague;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
 import com.waio.model.MatchTeamBean;
 import com.waio.model.PlayerDTO;
 
 @Repository("MatchDao")
-public class MatchDao extends JdbcDaoSupport implements IMatchDao {
-
-	@Autowired
-	DataSource dataSource;
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
+public class MatchDao extends AbstractDaoSupport implements IMatchDao {
+	
+	/*@Override
+	@Resource(name="matchDataSqlMap")
+	public void setSqlMap(Map<String, String> sqlMap) {
+		super.setSqlMap(sqlMap);
+	}*/
 
 	@Override
 	public List<MatchesDTO> getMatches() {
@@ -43,7 +39,7 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 
 	@Override
 	public List<LeagueDTO> getLeagues(int matchId) {
-		String sql = "SELECT l.ID,l.LEAGUE,l.SIZE,l.ENTRY_FEE,wb.RANK,wb.AMOUNT FROM LEAGUE l, WINNING_BREAKUP wb, MATCHES M, MATCH_LEAGUE ML WHERE l.WINNING_amount=wb.league_id AND M.unique_id= ML.MATCH_ID AND ML.LEAGUE_ID=l.ID AND M.unique_id=?";
+		String sql = "select ml.id, ml.league_id, league.league, league.size, league.entry_fee, ml.match_id from league, match_leagues ml where league.id = ml.league_id and ml.match_id=? and ml.status is null";
 		List<LeagueDTO> leagues = getJdbcTemplate().query(sql, new Object[] { matchId },
 				new BeanPropertyRowMapper<LeagueDTO>(LeagueDTO.class));
 		return leagues;
@@ -103,7 +99,7 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 	}
 	
 	public List<MatchTeam> getCreatedTeamsOfMatch(String uniqueNumber, String matchId){
-		String sql = "select distinct team.id, team.name teamName, team.match_id from team where team.created_id=? and team.match_id=? order by team.id";
+		String sql = "select distinct team.id, team.name teamName, team.match_id, team.created_id uniqueNumber from team where team.created_id=? and team.match_id=? order by team.id";
 		List<MatchTeam> teamList = getJdbcTemplate().query(sql, new Object[] {uniqueNumber, matchId}, new BeanPropertyRowMapper<MatchTeam>(MatchTeam.class));
 		return teamList;
 	}
@@ -113,5 +109,17 @@ public class MatchDao extends JdbcDaoSupport implements IMatchDao {
 		String sql = "select team.id, team.name teamName, team.match_id, p.pid, p.name, p.playingRole, p.credit, p.imageURL, p.country from team, team_player tp, player p where team.id=? and team.id=tp.team_id and tp.player_id = p.pid order by team.id";
 		List<MatchTeamBean> team = getJdbcTemplate().query(sql, new Object[] { teamId }, new BeanPropertyRowMapper<MatchTeamBean>(MatchTeamBean.class));
 		return team;
+	}
+	
+	@Override
+	public String joinLeague(JoinLeague joinLeague) {
+		String sql1 = "select count(team_id) from league_teams where league_id=?";
+		String sql = "insert into league_teams (league_id, team_id, created_id) values (?, ?, ?)";
+		int insertedRecord = getJdbcTemplate().update(sql, new Object[] { joinLeague.getLeague().getId(), joinLeague.getTeam().getId(), joinLeague.getTeam().getUniqueNumber() });
+		if(insertedRecord>0) {
+			return "League joined successfully, please join other league now.";
+		}else {
+			return "League not joined, please contact admisnistrator.";
+		}
 	}
 }

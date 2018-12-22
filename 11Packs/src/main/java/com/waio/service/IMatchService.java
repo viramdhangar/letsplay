@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.waio.cricapi.MatchesDTO;
+import com.waio.model.JoinLeague;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
 import com.waio.model.MatchTeamBean;
@@ -19,4 +20,5 @@ public interface IMatchService {
 	List<MatchTeam> getCreatedTeamsOfMatch(String uniqueNumber, String matchId);
 	MatchTeam getTeam(String uniqueNumber, String matchId, String teamId);
 	List<PlayerDTO> setSelectedPlayersInSquad(List<PlayerDTO> squad, MatchTeam matchTeam);
+	String joinLeague(JoinLeague joinLeague);
 }

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.waio.cricapi.MatchesDTO;
+import com.waio.model.JoinLeague;
 import com.waio.model.LeagueDTO;
-import com.waio.model.LeaguesResponse;
 import com.waio.model.MatchTeam;
 import com.waio.model.PlayerDTO;
 import com.waio.model.SquedResponse;
@@ -38,13 +38,10 @@ public class MatchController {
 	
 
 	@RequestMapping(value="/1.0/leagues/{matchId}", produces = {"application/JSON"})
-	public LeaguesResponse getLeagues(@PathVariable int matchId) {
-		LeaguesResponse leaguesRes = new LeaguesResponse();
+	public List<LeagueDTO> getLeagues(@PathVariable int matchId) {
 		List<LeagueDTO> leagues = new ArrayList<LeagueDTO>();
 		leagues = matchService.getLeagues(matchId);
-		leaguesRes.setLeagues(leagues);
-		leaguesRes.setMatchId(matchId);
-		return leaguesRes;
+		return leagues;
 	}
 
 	@RequestMapping(value="/1.0/squad/{matchId}", produces = {"application/JSON"})
@@ -90,5 +87,11 @@ public class MatchController {
 		sRes.setPlayers(squad);
 		sRes.setMatchId(Integer.parseInt(matchId));
 		return sRes;
+	}
+	
+	@GetMapping(value="/1.0/joinLeague")
+	public @ResponseBody String joinLeague(@RequestBody JoinLeague joinLeague) {
+		String message = matchService.joinLeague(joinLeague);
+		return message;
 	}
 }

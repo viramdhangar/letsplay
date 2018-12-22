@@ -6,7 +6,20 @@ public class LeagueDTO {
 	private String league;
 	private int size;
 	private int entryFee;
+	private String matchId;
 	
+	/**
+	 * @return the matchId
+	 */
+	public String getMatchId() {
+		return matchId;
+	}
+	/**
+	 * @param matchId the matchId to set
+	 */
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
+	}
 	/**
 	 * @return the id
 	 */

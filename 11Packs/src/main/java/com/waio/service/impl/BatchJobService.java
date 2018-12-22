@@ -8,17 +8,15 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.waio.cricapi.MatchesDTO;
 import com.waio.cricapi.NewMatchesData;
 import com.waio.cricapi.Team;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
-import com.waio.model.LeagueDTO;
-import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerDTO;
 import com.waio.service.IBatchJobService;
 import com.waio.service.ICricApiService;
@@ -61,25 +59,16 @@ public class BatchJobService implements IBatchJobService{
 		
 		if(batchJobDao.insertMatches(matchesList)>0) {
 			// set leagues bean for all matches
-			List<LeagueDTO> leagueList = batchJobDao.getLeagues();
-			List<MatchesLeagues> matchesLeagesList = new ArrayList<MatchesLeagues>();
 			for(MatchesDTO matches : matchesList) {
 				if(matches.getSquad().equalsIgnoreCase("false")) {
 					System.out.println("Squad not present := "+matches.getUnique_id());
 					continue;
 				}
 				insertSquad(matches);
-				
-				for(LeagueDTO league : leagueList) {
-					MatchesLeagues matchLeague = new MatchesLeagues();
-					matchLeague.setMatchId(matches.getUnique_id());
-					matchLeague.setLeagueId(league.getId());
-					matchesLeagesList.add(matchLeague);
-				}
 			}
 			
 			// insert leagues for all matches
-			insertLeagues(matchesLeagesList);
+			insertLeagues(matchesList);
 			
 			return newMatchesData;	
 		}else {
@@ -102,8 +91,8 @@ public class BatchJobService implements IBatchJobService{
 		}
 	}
 	
-	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
-		return batchJobDao.insertLeagues(matchesLeagesList);
+	public int insertLeagues(List<MatchesDTO> matchesList) {
+		return batchJobDao.insertLeagues(matchesList);
 	}
 	
 	public List<PlayerDTO> insertPlayerInfo(TeamSquad teamSquad, MatchesDTO matches) {

@@ -1,20 +1,27 @@
-drop table profile_match_team;
 
-CREATE TABLE team (
-    id VARCHAR(20) NOT NULL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+
+/*drop table match_league*/
+ CREATE TABLE match_leagues (
+    id int(10) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+    league_id VARCHAR(20) NOT NULL,
+    match_id VARCHAR(20) NOT NULL,
+    size int(10) NOT NULL,
+    created datetime DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE match_leagues
+ADD CONSTRAINT UC_MATCH_Leagues UNIQUE (match_id,league_id);
+
+
+
+
+
+/*drop table team_league*/
+CREATE TABLE league_teams (
+    league_id VARCHAR(20) NOT NULL,
+    team_id VARCHAR(20) NOT NULL,
     match_id VARCHAR(20) NOT NULL,
     created_id VARCHAR(20) NOT NULL,
     created datetime DEFAULT CURRENT_TIMESTAMP
 );
-
-
-ALTER TABLE match_squad
-ADD CONSTRAINT UC_MATCH_SQUAD UNIQUE (match_id,player_id);
-
-
-ALTER TABLE match_league
-ADD CONSTRAINT UC_MATCH_League UNIQUE (match_id,league_id);
-
-
 

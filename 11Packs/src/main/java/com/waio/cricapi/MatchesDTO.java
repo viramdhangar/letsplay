@@ -27,6 +27,19 @@ public class MatchesDTO {
 	private String team2Short;
 	private String typeShort;
 	private String formattedTeamName;	
+	private String tournamentName;
+	/**
+	 * @return the tournamentName
+	 */
+	public String getTournamentName() {
+		return tournamentName;
+	}
+	/**
+	 * @param tournamentName the tournamentName to set
+	 */
+	public void setTournamentName(String tournamentName) {
+		this.tournamentName = tournamentName;
+	}
 	/**
 	 * @return the formattedTeamName
 	 */

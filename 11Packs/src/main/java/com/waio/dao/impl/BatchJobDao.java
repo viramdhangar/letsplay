@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IBatchJobDao;
 import com.waio.model.LeagueDTO;
-import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerDTO;
 
 @Repository("BatchJobDao")
@@ -32,69 +31,33 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 
 	@Override
 	public int insertMatches(final List<MatchesDTO> matchesList) {
-		
-		String sql = "insert into matches (unique_id, date, datetime, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE date=?, datetime=?, team1=?, team2=?, type=?, squad=?, toss_winner_team=?, winner_team=?, matchStarted=?";
-		
-/*		int[] insertedMatches = getJdbcTemplate().batchUpdate(sql,
-	            new BatchPreparedStatementSetter() {
-	                @Override
-	                public void setValues(PreparedStatement ps, int i)
-	                        throws SQLException {
-	                    MatchesDTO match = matchesList.get(i);
-	                    ps.setString(1, match.getUnique_id());
-	                    ps.setDate(2, (Date) match.getDate());
-	                    ps.setDate(3, (Date) match.getDatetime());
-	                    ps.setString(4, match.getTeam1());
-	                    ps.setString(5, match.getTeam2());
-	                    ps.setString(6, match.getType());
-	                    ps.setString(7, match.getSquad());
-	                    ps.setString(8, match.getToss_winner_team());
-	                    ps.setString(9, match.getWinner_team());
-	                    ps.setString(10, match.getMatchStarted());
-	                    
-	                    ps.setDate(11, (Date) match.getDate());
-	                    ps.setDate(12, (Date) match.getDatetime());
-	                    ps.setString(13, match.getTeam1());
-	                    ps.setString(14, match.getTeam2());
-	                    ps.setString(15, match.getType());
-	                    ps.setString(16, match.getSquad());
-	                    ps.setString(17, match.getToss_winner_team());
-	                    ps.setString(18, match.getWinner_team());
-	                    ps.setString(19, match.getMatchStarted());
-	                }
 
-	                @Override
-	                public int getBatchSize() {
-	                    return matchesList.size();
-	                }
-	            });*/
-		for(MatchesDTO match : matchesList) {
-		getJdbcTemplate().update(sql, new Object[] {
-			    match.getUnique_id(),
-                match.getDate(),
-                match.getDatetime(),
-                match.getTeam1(),
-                match.getTeam2(),
-                match.getType(),
-                match.getSquad(),
-                match.getToss_winner_team(),
-                match.getWinner_team(),
-                match.getMatchStarted(),
-                
-                match.getDate(),
-                match.getDatetime(),
-                match.getTeam1(),
-                match.getTeam2(),
-                match.getType(),
-                match.getSquad(),
-                match.getToss_winner_team(),
-                match.getWinner_team(),
-                match.getMatchStarted()
-		});
+		String sql = "insert into matches (unique_id, date, datetime, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE date=?, datetime=?, team1=?, team2=?, type=?, squad=?, toss_winner_team=?, winner_team=?, matchStarted=?";
+		for (MatchesDTO match : matchesList) {
+			getJdbcTemplate().update(sql, new Object[] { 
+					match.getUnique_id(), 
+					match.getDate(), 
+					match.getDatetime(),
+					match.getTeam1(), 
+					match.getTeam2(), 
+					match.getType(), 
+					match.getSquad(), 
+					match.getToss_winner_team(),
+					match.getWinner_team(), 
+					match.getMatchStarted(),
+					match.getDate(), 
+					match.getDatetime(), 
+					match.getTeam1(), 
+					match.getTeam2(), 
+					match.getType(),
+					match.getSquad(), 
+					match.getToss_winner_team(), 
+					match.getWinner_team(), 
+					match.getMatchStarted() 
+				});
 		}
 		return matchesList.size();
 	}
-	
 
 	@Override
 	public int insertSquad(final String uniqueId, final List<PlayerDTO> playerList) {
@@ -159,22 +122,20 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	}
 	
 	@Override
-	public int insertLeagues(List<MatchesLeagues> matchesLeagesList) {
-		String sql = "insert into match_league (match_id, league_id) values (?, ?) ON DUPLICATE KEY update league_id=? ";
+	public int insertLeagues(List<MatchesDTO> matchesList) {
+		String sql = "insert into match_leagues (league_id, match_id, size) select league.id, ? match_id, league.size from league on duplicate key update created=current_timestamp";
 		int[] insertedLeagues = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
 	                public void setValues(PreparedStatement ps, int i)
 	                        throws SQLException {
-	                	MatchesLeagues matchesLeague = matchesLeagesList.get(i);
-	                    ps.setString(1, matchesLeague.getMatchId());
-	                    ps.setString(2, matchesLeague.getLeagueId());
-	                    ps.setString(3, matchesLeague.getLeagueId());
+	                	MatchesDTO matches = matchesList.get(i);
+	                    ps.setString(1, matches.getUnique_id());
 	                }
 
 	                @Override
 	                public int getBatchSize() {
-	                    return matchesLeagesList.size();
+	                    return matchesList.size();
 	                }
 	            });
 		return insertedLeagues.length;

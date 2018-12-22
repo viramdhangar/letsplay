@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.waio.cricapi.MatchesDTO;
 import com.waio.model.LeagueDTO;
-import com.waio.model.MatchesLeagues;
 import com.waio.model.PlayerDTO;
 
 /**
@@ -34,7 +33,7 @@ public interface IBatchJobDao {
 	 * @param matchesLeagesList
 	 * @return
 	 */
-	public int insertLeagues(List<MatchesLeagues> matchesLeagesList);
+	public int insertLeagues(List<MatchesDTO> matchesList);
 	/**
 	 * @param playerList
 	 * @return

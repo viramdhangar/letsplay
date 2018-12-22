@@ -36,6 +36,7 @@ public class EmployeeSecurityConfiguration extends WebSecurityConfigurerAdapter 
 		.antMatchers("/api/1.0/leagues/*").permitAll()
 		.antMatchers("/api/1.0/squad/*").permitAll()
 		.antMatchers("/api/1.0/createSquad").permitAll()
+		.antMatchers("/api/1.0/joinLeague").permitAll()
 		.antMatchers("/api/1.0/allMatchesTeams/*").permitAll()
 		.antMatchers("/api/1.0/teamsOfMatch/*/*").permitAll()
 		.antMatchers("/api/1.0/teamView/*/*/*").permitAll()

@@ -1,14 +1,16 @@
 package com.waio.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IMatchDao;
+import com.waio.model.JoinLeague;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
 import com.waio.model.MatchTeamBean;
@@ -159,12 +161,22 @@ public class MatchService implements IMatchService{
 
 	@Override
 	public List<PlayerDTO> setSelectedPlayersInSquad(List<PlayerDTO> squad, MatchTeam matchTeam) {
-		List<String> playerIds = new ArrayList<String>(); //   MatchTeam matchTeam
+		Collection<String> playerIds = CollectionUtils.collect(matchTeam.getPlayers(), new Transformer<PlayerDTO, String>(){
+			@Override
+			public String transform(PlayerDTO object) {
+				return object.getPid();
+			}
+		});
 		for(PlayerDTO squa : squad) {
 			if(playerIds.contains(squa.getPid())) {
 				squa.setSelected("Y");
 			}
 		}
 		return squad;
+	}
+
+	@Override
+	public String joinLeague(JoinLeague joinLeague) {
+		return matchDao.joinLeague(joinLeague);
 	}
 }
