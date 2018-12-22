@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="match_type_array">
+        <item>UPCOMING</item>
+        <item>LIVE</item>
+        <item>COMPLETED</item>
+    </string-array>
+
+</resources>
