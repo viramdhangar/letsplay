@@ -15,6 +15,7 @@ import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
 import com.waio.model.MatchTeamBean;
 import com.waio.model.PlayerDTO;
+import com.waio.model.WinningBreakupDTO;
 import com.waio.service.IMatchService;
 
 @Service("MatchService")
@@ -69,7 +70,7 @@ public class MatchService implements IMatchService{
 		return matchDao.getLeagues(matchId);
 	}
 	@Override
-	public List<PlayerDTO> getSquad(int matchId) {
+	public List<PlayerDTO> getSquad(String matchId) {
 		return matchDao.getSquad(matchId);
 	}
 
@@ -178,5 +179,10 @@ public class MatchService implements IMatchService{
 	@Override
 	public String joinLeague(JoinLeague joinLeague) {
 		return matchDao.joinLeague(joinLeague);
+	}
+
+	@Override
+	public List<WinningBreakupDTO> getWinningBreakup(String breakupId) {
+		return matchDao.getWinningBreakup(breakupId);
 	}
 }

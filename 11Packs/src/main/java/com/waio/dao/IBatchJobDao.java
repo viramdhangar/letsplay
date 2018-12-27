@@ -39,4 +39,5 @@ public interface IBatchJobDao {
 	 * @return
 	 */
 	int insertPlayerInfo(final List<PlayerDTO> playerList);
+	String createLeague(LeagueDTO leagueDTO);
 }

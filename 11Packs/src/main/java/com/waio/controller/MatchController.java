@@ -18,7 +18,7 @@ import com.waio.model.JoinLeague;
 import com.waio.model.LeagueDTO;
 import com.waio.model.MatchTeam;
 import com.waio.model.PlayerDTO;
-import com.waio.model.SquedResponse;
+import com.waio.model.WinningBreakupDTO;
 import com.waio.service.IMatchService;
 
 @CrossOrigin(origins="http://localhost:8100", maxAge = 3600)
@@ -43,15 +43,22 @@ public class MatchController {
 		leagues = matchService.getLeagues(matchId);
 		return leagues;
 	}
+	
+	@GetMapping(value="/1.0/winningBreakup/{breakupId}")
+	public List<WinningBreakupDTO> getWinningBreakup(@PathVariable String breakupId) {
+		List<WinningBreakupDTO> breakup = new ArrayList<WinningBreakupDTO>();
+		breakup = matchService.getWinningBreakup(breakupId);
+		return breakup;
+	}
 
 	@RequestMapping(value="/1.0/squad/{matchId}", produces = {"application/JSON"})
-	public SquedResponse getSquad(@PathVariable int matchId) {
-		SquedResponse sRes = new SquedResponse();
+	public MatchTeam getSquad(@PathVariable String matchId) {
+		MatchTeam matchSquad = new MatchTeam();
 		List<PlayerDTO> squad = new ArrayList<PlayerDTO>();
 		squad = matchService.getSquad(matchId);
-		sRes.setPlayers(squad);
-		sRes.setMatchId(matchId);
-		return sRes;
+		matchSquad.setPlayers(squad);
+		matchSquad.setMatchId(matchId);
+		return matchSquad;
 	}
 	
 	@PostMapping(value="/1.0/createSquad")
@@ -78,18 +85,18 @@ public class MatchController {
 		return matchTeam;
 	}
 	
-	@RequestMapping(value="/1.0/teamEdit/{uniqueNumber}/{matchId}/{teamId}", produces = {"application/JSON"})
-	public SquedResponse getSquad(@PathVariable String uniqueNumber, @PathVariable String matchId, @PathVariable String teamId) {
-		SquedResponse sRes = new SquedResponse();
+	@GetMapping(value = "/1.0/teamEdit/{uniqueNumber}/{matchId}/{teamId}")
+	public @ResponseBody MatchTeam getSquad(@PathVariable String uniqueNumber, @PathVariable String matchId,
+			@PathVariable String teamId) {
 		List<PlayerDTO> squad = new ArrayList<PlayerDTO>();
 		MatchTeam matchTeam = matchService.getTeam(uniqueNumber, matchId, teamId);
-		squad = matchService.setSelectedPlayersInSquad(matchService.getSquad(Integer.parseInt(matchId)), matchTeam);
-		sRes.setPlayers(squad);
-		sRes.setMatchId(Integer.parseInt(matchId));
-		return sRes;
+		squad = matchService.setSelectedPlayersInSquad(matchService.getSquad(matchId), matchTeam);
+		matchTeam = new MatchTeam();
+		matchTeam.setPlayers(squad);
+		return matchTeam;
 	}
 	
-	@GetMapping(value="/1.0/joinLeague")
+	@PostMapping(value="/1.0/joinLeague")
 	public @ResponseBody String joinLeague(@RequestBody JoinLeague joinLeague) {
 		String message = matchService.joinLeague(joinLeague);
 		return message;

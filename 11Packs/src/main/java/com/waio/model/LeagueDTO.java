@@ -1,13 +1,80 @@
 package com.waio.model;
 
+import java.util.List;
+
 public class LeagueDTO {
 
 	private String id;
 	private String league;
 	private int size;
+	private int joinedTeam;
 	private int entryFee;
 	private String matchId;
+	private int winners;
+	private int winningAmount;
+	private int breakupId;
+	private List<WinningBreakupDTO> breakup;
 	
+	/**
+	 * @return the joinedTeam
+	 */
+	public int getJoinedTeam() {
+		return joinedTeam;
+	}
+	/**
+	 * @param joinedTeam the joinedTeam to set
+	 */
+	public void setJoinedTeam(int joinedTeam) {
+		this.joinedTeam = joinedTeam;
+	}
+	/**
+	 * @return the breakupId
+	 */
+	public int getBreakupId() {
+		return breakupId;
+	}
+	/**
+	 * @param breakupId the breakupId to set
+	 */
+	public void setBreakupId(int breakupId) {
+		this.breakupId = breakupId;
+	}
+	/**
+	 * @return the breakup
+	 */
+	public List<WinningBreakupDTO> getBreakup() {
+		return breakup;
+	}
+	/**
+	 * @param breakup the breakup to set
+	 */
+	public void setBreakup(List<WinningBreakupDTO> breakup) {
+		this.breakup = breakup;
+	}
+	/**
+	 * @return the winningAmount
+	 */
+	public int getWinningAmount() {
+		return winningAmount;
+	}
+	/**
+	 * @param winningAmount the winningAmount to set
+	 */
+	public void setWinningAmount(int winningAmount) {
+		this.winningAmount = winningAmount;
+	}
+	/**
+	 * @return the winners
+	 */
+	public int getWinners() {
+		return winners;
+	}
+	/**
+	 * @param winners the winners to set
+	 */
+	public void setWinners(int winners) {
+		this.winners = winners;
+	}
 	/**
 	 * @return the matchId
 	 */

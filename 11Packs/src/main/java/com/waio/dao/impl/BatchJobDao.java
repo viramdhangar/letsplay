@@ -1,7 +1,9 @@
 package com.waio.dao.impl;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +19,7 @@ import com.waio.cricapi.MatchesDTO;
 import com.waio.dao.IBatchJobDao;
 import com.waio.model.LeagueDTO;
 import com.waio.model.PlayerDTO;
+import com.waio.model.WinningBreakupDTO;
 
 @Repository("BatchJobDao")
 public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
@@ -139,5 +142,48 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                }
 	            });
 		return insertedLeagues.length;
+	}
+	
+	@Override
+	public String createLeague(LeagueDTO leagueDTO) {
+		
+		int totalAmount = leagueDTO.getEntryFee()*leagueDTO.getSize();
+		int percentDeducted = 15;
+		int winningAmountDeducted = (totalAmount/100)*percentDeducted;
+		int totalWwinningAmount = totalAmount-winningAmountDeducted;
+		
+		String sql = "insert into league (league, entry_fee, winning_amount, size, winners) values (?, ?, ?, ?, ?)";
+		getJdbcTemplate().update(sql, new Object[] {
+				leagueDTO.getLeague(),
+				leagueDTO.getEntryFee(),
+				totalWwinningAmount,
+				leagueDTO.getSize(),
+				leagueDTO.getWinners()
+		});
+		
+		int leagueId = getJdbcTemplate().queryForObject("SELECT max(id) last from league", Integer.class);
+		leagueDTO.setId(String.valueOf(leagueId));
+		leagueDTO.setWinningAmount(totalWwinningAmount);
+		insertWinningRank(leagueDTO);
+		return "League created successfully.";
+	}
+	
+	public int insertWinningRank(LeagueDTO leagueDTO) {
+		String sql = "insert into winning_breakup (id, prizeMoney, prizeRank) values (?, ?, ?)";
+		final List<WinningBreakupDTO> breakup = leagueDTO.getBreakup();
+		int[] breakupInserted = getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				WinningBreakupDTO wbDTO = breakup.get(i);
+				ps.setString(1, leagueDTO.getId());
+				ps.setInt(2, ((leagueDTO.getWinningAmount()/100)*wbDTO.getWinningPercent()));
+				ps.setString(3, wbDTO.getPrizeRank());
+			}
+			@Override
+			public int getBatchSize() {
+				return breakup.size();
+			}
+		});
+		return breakupInserted.length;
 	}
 }

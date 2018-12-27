@@ -17,6 +17,7 @@ import com.waio.cricapi.NewMatchesData;
 import com.waio.cricapi.Team;
 import com.waio.cricapi.TeamSquad;
 import com.waio.dao.IBatchJobDao;
+import com.waio.model.LeagueDTO;
 import com.waio.model.PlayerDTO;
 import com.waio.service.IBatchJobService;
 import com.waio.service.ICricApiService;
@@ -44,6 +45,9 @@ public class BatchJobService implements IBatchJobService{
 		Date today = new Date();
 		
 		long ltime=today.getTime()+2*24*60*60*1000;
+		
+		
+		
 		Date today2=new Date(ltime);
 		
 		while(it.hasNext()) {
@@ -143,5 +147,10 @@ public class BatchJobService implements IBatchJobService{
 		}
 		
 	return playerList;
+	}
+
+	@Override
+	public String createLeague(LeagueDTO leagueDTO) {
+		return batchJobDao.createLeague(leagueDTO);
 	}
 }
