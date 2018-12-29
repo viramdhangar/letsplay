@@ -21,6 +21,7 @@ import com.waio.model.LeagueDTO;
 import com.waio.model.PlayerDTO;
 import com.waio.service.IBatchJobService;
 import com.waio.service.ICricApiService;
+import com.waio.util.DataUtils;
 
 /**
  * @author Viramm
@@ -40,19 +41,17 @@ public class BatchJobService implements IBatchJobService{
 		
 		NewMatchesData newMatchesData = cricApiService.newMatches();
 		List<MatchesDTO> matchesList = newMatchesData.getMatches();
-		Iterator<MatchesDTO> it = matchesList.iterator();
 		
-		Date today = new Date();
-		
+		Date today = new Date();	
 		long ltime=today.getTime()+2*24*60*60*1000;
+		long oneDay=today.getTime()-1*24*60*60*1000;
+		Date plusTwoDays=new Date(ltime);
+		Date minusOneDay=new Date(oneDay);
 		
-		
-		
-		Date today2=new Date(ltime);
-		
+		Iterator<MatchesDTO> it = matchesList.iterator();
 		while(it.hasNext()) {
 			MatchesDTO matches = it.next();
-			if((matches.getDatetime().equals(today) || matches.getDatetime().after(today)) && matches.getDatetime().before(today2)) {
+			if((matches.getDatetime().equals(minusOneDay) || matches.getDatetime().after(minusOneDay)) && matches.getDatetime().before(plusTwoDays)) {
 				if(StringUtils.isEmpty(matches.getUnique_id()) || StringUtils.isEmpty(matches.getType()) || StringUtils.isEmpty(matches.getTeam1()) || StringUtils.isEmpty(matches.getTeam2()) || matches.getDatetime()==null) {
 					it.remove();
 				}
@@ -105,41 +104,44 @@ public class BatchJobService implements IBatchJobService{
 			for(PlayerDTO player : team.getPlayers()) {
 				PlayerDTO playerDTO = cricApiService.playerInfo(player.getPid());	
 				if(playerDTO!=null) {
+					playerDTO.setPlayingTeamName(DataUtils.getShortForm(team.getName()));
 					if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Bowler")){
 						playerDTO.setPlayingRole("BOWL");
 					} else if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Allrounder")){
 						playerDTO.setPlayingRole("ALL");
 					} else if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("Wicketkeeper")){
 						playerDTO.setPlayingRole("WK");
-					} else {
+					} else if(playerDTO.getPlayingRole()!=null && playerDTO.getPlayingRole().contains("batsman")){
 						playerDTO.setPlayingRole("BAT");
+					} else {
+						playerDTO.setPlayingRole("ALL");
 					}
 					if(matches.getType().equalsIgnoreCase("Twenty20")  && playerDTO.getData().getBowling().getT20Is()!=null) {
 						if(playerDTO.getPlayingRole().contains("BOWL")){
 							if(playerDTO.getData().getBowling().getT20Is().getAve()<20) {
-								playerDTO.setCredit("9.5");
+								playerDTO.setCredit(9.5);
 							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>=20 && playerDTO.getData().getBatting().getT20Is().getAve()==24.99) {
-								playerDTO.setCredit("9");
+								playerDTO.setCredit(9);
 							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>25 && playerDTO.getData().getBatting().getT20Is().getAve()<=29.99) {
-								playerDTO.setCredit("8.5");
+								playerDTO.setCredit(8.5);
 							}else if (playerDTO.getData().getBowling().getT20Is().getAve()>30) {
-								playerDTO.setCredit("8");
+								playerDTO.setCredit(8);
 							}
 						} else {
 							if(playerDTO.getData().getBatting().getT20Is().getAve()>50) {
-								playerDTO.setCredit("10");
+								playerDTO.setCredit(10);
 							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>35 && playerDTO.getData().getBatting().getT20Is().getAve()<=49.99) {
-								playerDTO.setCredit("9.5");
+								playerDTO.setCredit(9.5);
 							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>25 && playerDTO.getData().getBatting().getT20Is().getAve()<=34.99) {
-								playerDTO.setCredit("9");
+								playerDTO.setCredit(9);
 							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>15 && playerDTO.getData().getBatting().getT20Is().getAve()<=24.99) {
-								playerDTO.setCredit("8.5");
+								playerDTO.setCredit(8.5);
 							}else if (playerDTO.getData().getBatting().getT20Is().getAve()>0 && playerDTO.getData().getBatting().getT20Is().getAve()<=14.99) {
-								playerDTO.setCredit("8");
+								playerDTO.setCredit(8);
 							}						
 						}
 					}else {
-						playerDTO.setCredit("9");
+						playerDTO.setCredit(9);
 					}
 				}
 				playerList.add(playerDTO);

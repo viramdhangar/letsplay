@@ -12,5 +12,4 @@ public class PacksApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PacksApplication.class, args);
 	}
-	 
 }

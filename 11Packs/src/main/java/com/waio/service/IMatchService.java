@@ -12,7 +12,7 @@ import com.waio.model.WinningBreakupDTO;
 public interface IMatchService {
 
 	public List<MatchesDTO> getMatches();
-	public List<LeagueDTO> getLeagues(int matchId);
+	public List<LeagueDTO> getLeagues(String matchId);
 	public List<PlayerDTO> getSquad(String matchId);
 	public String createTeam(MatchTeam team);
 	List<MatchTeam> getCreatedTeams(String uniqueNumber);
@@ -21,4 +21,10 @@ public interface IMatchService {
 	List<PlayerDTO> setSelectedPlayersInSquad(List<PlayerDTO> squad, MatchTeam matchTeam);
 	String joinLeague(JoinLeague joinLeague);
 	List<WinningBreakupDTO> getWinningBreakup(String LeagueId);
+	String teamValidations(MatchTeam team);
+	MatchesDTO getMatchLiveStatus (String matchId);
+	List<LeagueDTO> getJoinedLeagues(String uniqueNumber, String matchId);
+	List<LeagueDTO> getJoinedLeagues(String uniqueNumber);
+	List<MatchTeam> getJoinedLeagueTeams(String uniqueNumber, String matchId, String leagueId);
+	String switchTeam(MatchTeam matchTeam, String leagueId);
 }

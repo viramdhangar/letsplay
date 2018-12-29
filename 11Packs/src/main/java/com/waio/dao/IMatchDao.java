@@ -14,7 +14,7 @@ import com.waio.model.WinningBreakupDTO;
 public interface IMatchDao {
 
 	public List<MatchesDTO> getMatches();
-	public List<LeagueDTO> getLeagues(int matchId);
+	public List<LeagueDTO> getLeagues(String matchId);
 	public List<PlayerDTO> getSquad(String matchId);
 	int createTeam(MatchTeam team);
 	BigInteger insertTeam(MatchTeam matchTeam);
@@ -23,4 +23,11 @@ public interface IMatchDao {
 	List<MatchTeamBean> getTeam(String uniqueNumber, String matchId, String teamId);
 	String joinLeague(JoinLeague joinLeague);
 	List<WinningBreakupDTO> getWinningBreakup(String LeagueId);
+	void setTeamName (MatchTeam matchTeam);
+	int deleteTeam(String teamId);
+	MatchesDTO getMatchLiveStatus (String matchId);
+	List<LeagueDTO> getJoinedLeagues(String uniqueNumber, String matchId);
+	List<LeagueDTO> getJoinedLeagues(String uniqueNumber);
+	List<MatchTeam> getJoinedLeagueTeams(String uniqueNumber, String matchId, String leagueId);
+	int switchTeam(MatchTeam matchTeam, String leagueId);
 }

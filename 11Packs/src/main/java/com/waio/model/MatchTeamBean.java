@@ -18,12 +18,51 @@ public class MatchTeamBean {
     private String imageURL;
     private String country;
     private String playingRole;
-    private String credit;
+    private double credit;
     private String majorTeams;
 	private String currentAge;
     private String born;
     private String battingStyle;
     private String bowlingStyle;
+    private String captain;
+    private String viceCaptain;
+    private String playingTeamName;
+	/**
+	 * @return the playingTeamName
+	 */
+	public String getPlayingTeamName() {
+		return playingTeamName;
+	}
+	/**
+	 * @param playingTeamName the playingTeamName to set
+	 */
+	public void setPlayingTeamName(String playingTeamName) {
+		this.playingTeamName = playingTeamName;
+	}
+	/**
+	 * @return the captain
+	 */
+	public String getCaptain() {
+		return captain;
+	}
+	/**
+	 * @param captain the captain to set
+	 */
+	public void setCaptain(String captain) {
+		this.captain = captain;
+	}
+	/**
+	 * @return the viceCaptain
+	 */
+	public String getViceCaptain() {
+		return viceCaptain;
+	}
+	/**
+	 * @param viceCaptain the viceCaptain to set
+	 */
+	public void setViceCaptain(String viceCaptain) {
+		this.viceCaptain = viceCaptain;
+	}
 	/**
 	 * @return the id
 	 */
@@ -135,13 +174,13 @@ public class MatchTeamBean {
 	/**
 	 * @return the credit
 	 */
-	public String getCredit() {
+	public double getCredit() {
 		return credit;
 	}
 	/**
 	 * @param credit the credit to set
 	 */
-	public void setCredit(String credit) {
+	public void setCredit(double credit) {
 		this.credit = credit;
 	}
 	/**

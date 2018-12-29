@@ -1,7 +1,7 @@
 android {
     defaultConfig {
         resValue("string", "app_name", "Packs Dev")
-        resValue("string", "baseUrl", "http://192.168.88.247:8080")
+        resValue("string", "baseUrl", "http://192.168.0.102:8080")
         resValue("string", "provider", "com.techrock.elevenpacks.dev")
     }
 

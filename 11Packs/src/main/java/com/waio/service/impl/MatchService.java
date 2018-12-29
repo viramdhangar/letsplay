@@ -1,11 +1,13 @@
 package com.waio.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.waio.cricapi.MatchesDTO;
@@ -17,6 +19,7 @@ import com.waio.model.MatchTeamBean;
 import com.waio.model.PlayerDTO;
 import com.waio.model.WinningBreakupDTO;
 import com.waio.service.IMatchService;
+import com.waio.util.DataUtils;
 
 @Service("MatchService")
 public class MatchService implements IMatchService{
@@ -28,8 +31,8 @@ public class MatchService implements IMatchService{
 	public List<MatchesDTO> getMatches() {
 		List<MatchesDTO> matchesList = matchDao.getMatches();
 		for(MatchesDTO matches : matchesList) {
-			matches.setTeam1Short(getShortForm(matches.getTeam1()));
-			matches.setTeam2Short(getShortForm(matches.getTeam2()));
+			matches.setTeam1Short(DataUtils.getShortForm(matches.getTeam1()));
+			matches.setTeam2Short(DataUtils.getShortForm(matches.getTeam2()));
 			matches.setFormattedTeamName(matches.getTeam1Short()+"  vs  "+matches.getTeam2Short());
 			if(matches.getType().contains("20")) {
 				matches.setTypeShort("T20");
@@ -46,27 +49,8 @@ public class MatchService implements IMatchService{
 		return matchesList;
 	}
 
-	/**
-	 * @param matches
-	 */
-	private String getShortForm(String teamName) {
-		String[] words = teamName.split("\\W+");
-		StringBuffer sb = new StringBuffer();
-		if(words.length == 1) {
-			return teamName.substring(0,  3).toUpperCase();
-		}
-		for(String str : words) {
-			//if(sb.length()<1) {
-				//sb.append(str.substring(0,3));
-			//}else {
-				sb.append(str.substring(0,1));	
-			//}
-		}
-		return sb.toString().toUpperCase();
-	}
-
 	@Override
-	public List<LeagueDTO> getLeagues(int matchId) {
+	public List<LeagueDTO> getLeagues(String matchId) {
 		return matchDao.getLeagues(matchId);
 	}
 	@Override
@@ -76,21 +60,37 @@ public class MatchService implements IMatchService{
 
 	@Override
 	public String createTeam(MatchTeam team) {
-		String str = teamValidations(team);
-		if(org.springframework.util.StringUtils.isEmpty(str)) {
+		String result = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(team.getId())) {
+			// update existing team
+			// 1. delete team first from team_player
+			matchDao.deleteTeam(team.getId());
+			// 2. insert team again with new players
 			int insertedPlayers = matchDao.createTeam(team);
-			if(insertedPlayers>0) {
-				return "Team created successfully. Please join league now.";	
+			if (insertedPlayers > 0) {
+				result = "Team updated successfully.";
+			}
+		} else {
+			// create new team
+			// 1. insert team info
+			BigInteger teamId = matchDao.insertTeam(team);
+			// 2. set team id
+			team.setId(String.valueOf(teamId));
+			// 3. insert new team
+			int insertedPlayers = matchDao.createTeam(team);
+			if (insertedPlayers > 0) {
+				result = "Team created successfully. Please join league now.";
 			}
 		}
-		return str;
+		return result;
 	}
 	
 	/**
 	 * @param team
 	 * @return validation message
 	 */
-	private String teamValidations(MatchTeam team) {
+	@Override
+	public String teamValidations(MatchTeam team) {
 		List<PlayerDTO> listBat = new ArrayList<PlayerDTO>();
 		List<PlayerDTO> listBowl = new ArrayList<PlayerDTO>();
 		List<PlayerDTO> listAll = new ArrayList<PlayerDTO>();
@@ -145,9 +145,11 @@ public class MatchService implements IMatchService{
 			playerDTO.setPid(matchBean.getPid());
 			playerDTO.setName(matchBean.getName());
 			playerDTO.setPlayingRole(matchBean.getPlayingRole());
-			playerDTO.setCredit(matchBean.getCredit());
 			playerDTO.setImageURL(matchBean.getImageURL());
 			playerDTO.setCountry(matchBean.getCountry());
+			playerDTO.setCaptain(matchBean.getCaptain());
+			playerDTO.setViceCaptain(matchBean.getViceCaptain());
+			playerDTO.setPlayingTeamName(matchBean.getPlayingTeamName());
 			players.add(playerDTO);
 		}
 		matchTeam.setId(teamId);
@@ -184,5 +186,36 @@ public class MatchService implements IMatchService{
 	@Override
 	public List<WinningBreakupDTO> getWinningBreakup(String breakupId) {
 		return matchDao.getWinningBreakup(breakupId);
+	}
+
+	@Override
+	public MatchesDTO getMatchLiveStatus(String matchId) {
+		return matchDao.getMatchLiveStatus(matchId);
+	}
+
+	@Override
+	public List<LeagueDTO> getJoinedLeagues(String uniqueNumber, String matchId) {
+		return matchDao.getJoinedLeagues(uniqueNumber, matchId);
+	}
+
+	@Override
+	public List<LeagueDTO> getJoinedLeagues(String uniqueNumber) {
+		return matchDao.getJoinedLeagues(uniqueNumber);
+	}
+
+	@Override
+	public List<MatchTeam> getJoinedLeagueTeams(String uniqueNumber, String matchId, String leagueId) {
+		return matchDao.getJoinedLeagueTeams(uniqueNumber, matchId, leagueId);
+	}
+
+	@Override
+	public String switchTeam(MatchTeam matchTeam, String leagueId) {
+		String result = StringUtils.EMPTY;
+		if(matchDao.switchTeam(matchTeam, leagueId) > 0) {
+			result = "Team swithed successfully.";
+		} else {
+			result = "Team Not switched.";
+		}
+		return result;
 	}
 }

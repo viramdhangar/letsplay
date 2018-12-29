@@ -2,6 +2,7 @@ package girnarsoft.com.demoapp.network;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.Result;
 
+import girnarsoft.com.demoapp.utils.LoadingDialog;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Response;
@@ -20,7 +21,7 @@ public abstract class BaseNetworkHeaderObservable<T> implements Observer<Result<
         } else {
             failure(new RuntimeException("Unexpected response " + t));
         }
-       // LoadingDialog.dismissDialog();
+        LoadingDialog.dismissDialog();
 
     }
 

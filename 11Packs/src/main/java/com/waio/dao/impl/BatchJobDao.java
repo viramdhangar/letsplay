@@ -1,9 +1,7 @@
 package com.waio.dao.impl;
 
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -35,7 +33,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	@Override
 	public int insertMatches(final List<MatchesDTO> matchesList) {
 
-		String sql = "insert into matches (unique_id, date, datetime, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE date=?, datetime=?, team1=?, team2=?, type=?, squad=?, toss_winner_team=?, winner_team=?, matchStarted=?";
+		String sql = "insert into matches (unique_id, date, datetime, team1, team2, type, squad, toss_winner_team, winner_team, matchStarted ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE matchStarted=?";
 		for (MatchesDTO match : matchesList) {
 			getJdbcTemplate().update(sql, new Object[] { 
 					match.getUnique_id(), 
@@ -48,14 +46,6 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 					match.getToss_winner_team(),
 					match.getWinner_team(), 
 					match.getMatchStarted(),
-					match.getDate(), 
-					match.getDatetime(), 
-					match.getTeam1(), 
-					match.getTeam2(), 
-					match.getType(),
-					match.getSquad(), 
-					match.getToss_winner_team(), 
-					match.getWinner_team(), 
 					match.getMatchStarted() 
 				});
 		}
@@ -64,7 +54,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 
 	@Override
 	public int insertSquad(final String uniqueId, final List<PlayerDTO> playerList) {
-		String sql = "insert into match_squad (match_id, player_id) values (?, ?) ON DUPLICATE KEY update player_id=?";		
+		String sql = "insert into match_squad (match_id, player_id, credit, team ) values (?, ?, ?, ?) ON DUPLICATE KEY update player_id=?";		
 		
 		int[] insertedPlayers = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
@@ -74,7 +64,9 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                	PlayerDTO player = playerList.get(i);
 	                    ps.setString(1, uniqueId);
 	                    ps.setString(2, player.getPid());
-	                    ps.setString(3, player.getPid());
+	                    ps.setDouble(3, player.getCredit());
+	                    ps.setString(4, player.getPlayingTeamName());
+	                    ps.setString(5, player.getPid());
 	                }
 
 	                @Override
@@ -87,7 +79,7 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	
 	@Override
 	public int insertPlayerInfo(final List<PlayerDTO> playerList) {
-		String sql = "insert into player (pid, name, imageURL, country, playingRole, credit, major_teams, current_age, born, battingStyle, bowlingStyle) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=?, imageURL=?";
+		String sql = "insert into player (pid, name, imageURL, country, playingRole, major_teams, current_age, born, battingStyle, bowlingStyle) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE imageURL=?";
 		int[] insertedPlayers = getJdbcTemplate().batchUpdate(sql,
 	            new BatchPreparedStatementSetter() {
 	                @Override
@@ -99,15 +91,14 @@ public class BatchJobDao extends JdbcDaoSupport implements IBatchJobDao{
 	                    ps.setString(3, player.getImageURL());
 	                    ps.setString(4, player.getCountry());
 	                    ps.setString(5, player.getPlayingRole());
-	                    ps.setString(6, player.getCredit());
-	                    ps.setString(7, player.getMajorTeams());
-	                    ps.setString(8, player.getCurrentAge());
-	                    ps.setString(9, player.getBorn());
-	                    ps.setString(10, player.getBattingStyle());
-	                    ps.setString(11, player.getBowlingStyle());
+	                   // ps.setDouble(6, player.getCredit());
+	                    ps.setString(6, player.getMajorTeams());
+	                    ps.setString(7, player.getCurrentAge());
+	                    ps.setString(8, player.getBorn());
+	                    ps.setString(9, player.getBattingStyle());
+	                    ps.setString(10, player.getBowlingStyle());
 	                    
-	                    ps.setString(12, player.getName());
-	                    ps.setString(13, player.getImageURL());
+	                    ps.setString(11, player.getImageURL());
 	                }
 
 	                @Override

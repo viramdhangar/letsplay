@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.waio.model.LeagueDTO;
 import com.waio.service.IBatchJobService;
 
-@RestController
+//@RestController
 @RequestMapping({"/api/job"})
 public class BatchJobController {
 
-	@Autowired
+	/*@Autowired
 	private IBatchJobService batchJobService;
-	
+*/	
 	/*@GetMapping("/1.0/matchesAPI")
 	public NewMatchesData matchesAPI() {
 		return batchJobService.insertNewMatches();
 	}*/
 	
-	@PostMapping("/1.0/createLeague")
+/*	@PostMapping("/1.0/createLeague")
 	public @ResponseBody String createLeague(@RequestBody LeagueDTO leagueDTO) {
 		return batchJobService.createLeague(leagueDTO);
-	}
+	}*/
 }

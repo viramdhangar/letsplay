@@ -13,8 +13,21 @@ public class LeagueDTO {
 	private int winners;
 	private int winningAmount;
 	private int breakupId;
+	private String status;
 	private List<WinningBreakupDTO> breakup;
 	
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	/**
 	 * @return the joinedTeam
 	 */

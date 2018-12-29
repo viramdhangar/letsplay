@@ -212,7 +212,7 @@ CREATE TABLE `match_leagues` (
   `joined_team` int(10) DEFAULT '0',
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,8 +232,10 @@ DROP TABLE IF EXISTS `match_squad`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `match_squad` (
-  `match_id` int(9) NOT NULL,
-  `player_id` int(9) NOT NULL,
+  `match_id` bigint(20) NOT NULL,
+  `player_id` bigint(20) NOT NULL,
+  `credit` int(5) DEFAULT '8',
+  `team` varchar(20) NOT NULL,
   UNIQUE KEY `UC_MATCH_SQUAD` (`match_id`,`player_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -265,7 +267,7 @@ CREATE TABLE `matches` (
   `toss_winner_team` varchar(50) DEFAULT NULL,
   `winner_team` varchar(50) DEFAULT NULL,
   `matchStarted` varchar(20) DEFAULT NULL,
-  `matchLive` varchar(20) DEFAULT NULL,
+  `is_active` varchar(5) DEFAULT 'N',
   PRIMARY KEY (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -276,7 +278,6 @@ CREATE TABLE `matches` (
 
 LOCK TABLES `matches` WRITE;
 /*!40000 ALTER TABLE `matches` DISABLE KEYS */;
-INSERT INTO `matches` VALUES ('1144153','2018-12-26','2018-12-26 13:30:00','South Africa','Pakistan','Test','true',NULL,NULL,'false',NULL),('1144995','2018-12-25','2018-12-26 05:00:00','Australia','India','Test','true',NULL,NULL,'false',NULL),('1152519','2018-12-26','2018-12-26 13:45:00','Perth Scorchers','Adelaide Strikers','Twenty20','true',NULL,NULL,'false',NULL),('1152520','2018-12-27','2018-12-27 13:45:00','Sydney Sixers','Melbourne Stars','Twenty20','true',NULL,NULL,'false',NULL),('1152521','2018-12-28','2018-12-28 13:45:00','Hobart Hurricanes','Sydney Thunder','Twenty20','true',NULL,NULL,'false',NULL),('1152754','2018-12-26','2018-12-26 14:15:00','Perth Scorchers Women','Brisbane Heat Women','Twenty20','true',NULL,NULL,'false',NULL),('1152755','2018-12-27','2018-12-27 09:20:00','Sydney Sixers Women','Melbourne Renegades Women','Twenty20','true',NULL,NULL,'false',NULL),('1152756','2018-12-28','2018-12-28 08:40:00','Sydney Sixers Women','Adelaide Strikers Women','Twenty20','true',NULL,NULL,'false',NULL),('1152757','2018-12-29','2018-12-29 07:30:00','Perth Scorchers Women','Sydney Thunder Women','Twenty20','true',NULL,NULL,'false',NULL),('1152759','2018-12-29','2018-12-29 09:20:00','Melbourne Renegades Women','Melbourne Stars Women','Twenty20','true',NULL,NULL,'false',NULL),('1153839','2018-12-25','2018-12-26 03:30:00','New Zealand','Sri Lanka','Test','true',NULL,NULL,'false',NULL),('1160500','2018-12-27','2018-12-27 11:30:00','Central Districts','Northern Districts','Twenty20','true',NULL,NULL,'false',NULL),('1160501','2018-12-28','2018-12-28 08:30:00','Otago','Wellington','Twenty20','false',NULL,NULL,'false',NULL),('1160502','2018-12-29','2018-12-29 08:30:00','Auckland','Central Districts','Twenty20','false',NULL,NULL,'false',NULL),('1168565','2018-12-25','2018-12-25 15:30:00','Rawalpindi','Lahore Whites','Twenty20','true',NULL,NULL,'false',NULL);
 /*!40000 ALTER TABLE `matches` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +294,6 @@ CREATE TABLE `player` (
   `imageURL` varchar(200) DEFAULT NULL,
   `country` varchar(50) NOT NULL,
   `playingRole` varchar(60) DEFAULT 'BAT',
-  `credit` varchar(10) DEFAULT '8',
   `major_teams` varchar(500) DEFAULT NULL,
   `current_age` varchar(50) DEFAULT NULL,
   `born` varchar(100) DEFAULT NULL,
@@ -404,6 +404,9 @@ DROP TABLE IF EXISTS `team_player`;
 CREATE TABLE `team_player` (
   `team_id` bigint(20) NOT NULL,
   `player_id` int(10) NOT NULL,
+  `captain` varchar(1) DEFAULT 'N',
+  `vice_captain` varchar(1) DEFAULT 'N',
+  `team` varchar(20) NOT NULL,
   UNIQUE KEY `UC_TEAM_PLAYER` (`team_id`,`player_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -526,4 +529,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-27 11:32:27
+-- Dump completed on 2018-12-29 14:25:24

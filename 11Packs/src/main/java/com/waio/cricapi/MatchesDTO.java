@@ -28,6 +28,19 @@ public class MatchesDTO {
 	private String typeShort;
 	private String formattedTeamName;	
 	private String tournamentName;
+	private String isActive;
+	/**
+	 * @return the isActive
+	 */
+	public String getIsActive() {
+		return isActive;
+	}
+	/**
+	 * @param isActive the isActive to set
+	 */
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
 	/**
 	 * @return the tournamentName
 	 */
