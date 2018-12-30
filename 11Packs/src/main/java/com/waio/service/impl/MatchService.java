@@ -95,7 +95,13 @@ public class MatchService implements IMatchService{
 		List<PlayerDTO> listBowl = new ArrayList<PlayerDTO>();
 		List<PlayerDTO> listAll = new ArrayList<PlayerDTO>();
 		List<PlayerDTO> listWk = new ArrayList<PlayerDTO>();
+		
+		List<PlayerDTO> team1 = new ArrayList<PlayerDTO>();
+		List<PlayerDTO> team2 = new ArrayList<PlayerDTO>();
+		
 		String str = "";
+		String teamName = StringUtils.EMPTY;
+		double totalCredits = 0;
 		for(PlayerDTO player : team.getPlayers()) {
 			if("BAT".equalsIgnoreCase(player.getPlayingRole())) {
 				listBat.add(player);
@@ -106,7 +112,32 @@ public class MatchService implements IMatchService{
 			}else if("WK".equalsIgnoreCase(player.getPlayingRole())) {
 				listWk.add(player);
 			}
+			
+			// create separate team list to check each team size
+			if(StringUtils.isEmpty(teamName)) {
+				team1.add(player);
+				teamName = player.getPlayingTeamName();
+			}
+			if(player.getPlayingTeamName().equalsIgnoreCase(teamName)) {
+				team1.add(player);
+			} else {
+				team2.add(player);
+			}
+			
+			// add credit
+			totalCredits = totalCredits + player.getCredit();
 		}
+		
+		// check each team size validations
+		if(team1.size() > 7 || team2.size() > 7) {
+			str = "Maximum 7 players allowed from one team";
+		}
+		
+		// validate credits should not go beyond 100
+		if(totalCredits >100) {
+			str = "You are crossing maximum salary limit of 100 Cr";
+		}
+		
 		if(listBat.size()<3 || listBat.size()>5) {
 			str = "3 to 5 batsman are compulsory";
 		} else if(listBowl.size()<3 || listBowl.size()>5) {

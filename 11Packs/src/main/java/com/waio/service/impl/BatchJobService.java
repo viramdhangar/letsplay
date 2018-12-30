@@ -36,7 +36,7 @@ public class BatchJobService implements IBatchJobService{
 	@Autowired
 	private IBatchJobDao batchJobDao;
 	
-	@Autowired
+	@Override // @Autowired
 	public NewMatchesData insertNewMatches() {
 		
 		NewMatchesData newMatchesData = cricApiService.newMatches();

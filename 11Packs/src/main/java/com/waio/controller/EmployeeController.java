@@ -53,16 +53,7 @@ public class EmployeeController {
 		model.addObject("employees", employees);
 		return model;
 	}
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model model, String error, String logout) {
-		if (error != null)
-			model.addAttribute("errorMsg", "Your username and password are invalid.");
 
-		if (logout != null)
-			model.addAttribute("msg", "You have been logged out successfully.");
-
-		return "login";
-	}
 	private static String UPLOAD_FOLDER = "C://test//";
 	@PostMapping("/upload")
 	public ModelAndView fileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {

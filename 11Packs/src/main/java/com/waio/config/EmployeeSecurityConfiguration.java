@@ -31,6 +31,7 @@ public class EmployeeSecurityConfiguration extends WebSecurityConfigurerAdapter 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+		.antMatchers("/identity/login/*").permitAll()
 		.antMatchers("/api/1.0/matches").permitAll()
 		.antMatchers("/api/job/1.0/matchesAPI").permitAll()
 		.antMatchers("/api/1.0/leagues/*").permitAll()
