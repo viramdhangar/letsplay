@@ -2,7 +2,7 @@ package girnarsoft.com.demoapp.network;
 
 import android.content.Context;
 
-import girnarsoft.com.demoapp.activity.service.MatchService;
+import girnarsoft.com.demoapp.fragment.service.MatchService;
 import girnarsoft.com.demoapp.network.locator.IServiceFactory;
 
 public class ApiServiceFactory implements IServiceFactory {

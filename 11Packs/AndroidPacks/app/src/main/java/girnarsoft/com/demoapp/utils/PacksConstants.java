@@ -7,4 +7,10 @@ public interface PacksConstants {
         int LIVE = 2;
         int COMPLETED = 3;
     }
+
+    public interface LeagueType{
+        int NORMAL_LEAGUE = 0;
+        int HEADTOHEAD_LEAGUE = 2;
+        int TRIPLE_LEAGUE = 3;
+    }
 }

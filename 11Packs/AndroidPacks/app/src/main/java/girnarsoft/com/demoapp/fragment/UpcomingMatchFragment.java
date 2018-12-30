@@ -5,10 +5,10 @@ import android.databinding.ViewDataBinding;
 import java.util.List;
 
 import girnarsoft.com.demoapp.R;
-import girnarsoft.com.demoapp.activity.adapter.MatchRecyclerAdapter;
-import girnarsoft.com.demoapp.activity.model.MatchModel;
-import girnarsoft.com.demoapp.activity.service.IMatchService;
-import girnarsoft.com.demoapp.activity.viewModel.MatchViewModel;
+import girnarsoft.com.demoapp.fragment.adapter.MatchRecyclerAdapter;
+import girnarsoft.com.demoapp.fragment.model.MatchModel;
+import girnarsoft.com.demoapp.fragment.service.IMatchService;
+import girnarsoft.com.demoapp.fragment.viewModel.MatchViewModel;
 import girnarsoft.com.demoapp.databinding.FragmentUpcomingMatchBinding;
 import girnarsoft.com.demoapp.network.viewcallback.AbstractViewCallback;
 import girnarsoft.com.demoapp.utils.CommonUtility;

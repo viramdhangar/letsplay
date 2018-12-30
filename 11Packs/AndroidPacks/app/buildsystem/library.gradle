@@ -18,7 +18,7 @@ ext {
 //            flurry                     : "6.3.1",
             google_api_client          : "1.21.0",
 
-            glide   : "3.7.0",
+            glide   : "4.8.0",
             cupborad: "2.2.0",
             multidex: "1.0.1",
 

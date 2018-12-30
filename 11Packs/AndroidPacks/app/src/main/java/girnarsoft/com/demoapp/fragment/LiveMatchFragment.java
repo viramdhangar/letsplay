@@ -1,17 +1,21 @@
 package girnarsoft.com.demoapp.fragment;
 
+import android.content.Intent;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 
 import java.util.List;
 
 import girnarsoft.com.demoapp.R;
-import girnarsoft.com.demoapp.activity.adapter.MatchRecyclerAdapter;
-import girnarsoft.com.demoapp.activity.model.MatchModel;
-import girnarsoft.com.demoapp.activity.service.IMatchService;
-import girnarsoft.com.demoapp.activity.viewModel.MatchViewModel;
+import girnarsoft.com.demoapp.activity.MatchLeagueActivity;
+import girnarsoft.com.demoapp.fragment.adapter.MatchRecyclerAdapter;
+import girnarsoft.com.demoapp.fragment.model.MatchModel;
+import girnarsoft.com.demoapp.fragment.service.IMatchService;
+import girnarsoft.com.demoapp.fragment.viewModel.MatchViewModel;
 import girnarsoft.com.demoapp.databinding.FragmentLiveMatchBinding;
 import girnarsoft.com.demoapp.network.viewcallback.AbstractViewCallback;
 import girnarsoft.com.demoapp.utils.CommonUtility;
+import girnarsoft.com.demoapp.utils.NormalUtility;
 import girnarsoft.com.demoapp.utils.PacksConstants;
 import girnarsoft.com.demoapp.utils.ValidationUtils;
 
@@ -45,6 +49,7 @@ public class LiveMatchFragment extends AbstractBaseFragment {
             adapter.notifyDataSetChanged();
             adapter.setOnItemClickListener((view, viewModel) -> {
                 MatchModel myTaskModel = (MatchModel) viewModel;
+                //NormalUtility.replaceFragment(getAbstractBaseActivity(),leagueListFragment,MatchLeagueListFragment.TAG,R.id.matchContainer,false,false);
             });
 
         } else {

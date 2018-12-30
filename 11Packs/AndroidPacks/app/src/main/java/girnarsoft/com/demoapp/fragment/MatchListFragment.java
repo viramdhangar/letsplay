@@ -1,15 +1,17 @@
 package girnarsoft.com.demoapp.fragment;
 
+import android.content.Intent;
 import android.databinding.ViewDataBinding;
 
 
 import java.util.List;
 
 import girnarsoft.com.demoapp.R;
-import girnarsoft.com.demoapp.activity.adapter.MatchRecyclerAdapter;
-import girnarsoft.com.demoapp.activity.model.MatchModel;
-import girnarsoft.com.demoapp.activity.service.IMatchService;
-import girnarsoft.com.demoapp.activity.viewModel.MatchViewModel;
+import girnarsoft.com.demoapp.activity.MatchLeagueActivity;
+import girnarsoft.com.demoapp.fragment.adapter.MatchRecyclerAdapter;
+import girnarsoft.com.demoapp.fragment.model.MatchModel;
+import girnarsoft.com.demoapp.fragment.service.IMatchService;
+import girnarsoft.com.demoapp.fragment.viewModel.MatchViewModel;
 import girnarsoft.com.demoapp.databinding.FragmentMatchListBinding;
 import girnarsoft.com.demoapp.network.viewcallback.AbstractViewCallback;
 import girnarsoft.com.demoapp.utils.CommonUtility;
@@ -48,6 +50,10 @@ public class MatchListFragment extends AbstractBaseFragment {
             adapter.notifyDataSetChanged();
             adapter.setOnItemClickListener((view, viewModel) -> {
                 MatchModel myTaskModel = (MatchModel) viewModel;
+                Intent intent  = new Intent(getAbstractBaseActivity(), MatchLeagueActivity.class);
+                intent.putExtra("matchId",myTaskModel.getUniqueId());
+                intent.putExtra("title", myTaskModel.getShortName());
+                startActivity(intent);
             });
 
         } else {

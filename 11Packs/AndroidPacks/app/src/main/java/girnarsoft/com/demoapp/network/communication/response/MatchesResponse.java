@@ -65,6 +65,53 @@ public class MatchesResponse {
         @Expose
         private String typeShort;
 
+        @SerializedName("teamOneUrl")
+        @Expose
+        private String teamOneUrl;
+        @SerializedName("teamTwoUrl")
+        @Expose
+        private String teamTwoUrl;
+
+        @SerializedName("isActive")
+        @Expose
+        private String isActive;
+
+        @SerializedName("tournamentName")
+        @Expose
+        private String tournamentName;
+
+        public String getIsActive() {
+            return isActive;
+        }
+
+        public void setIsActive(String isActive) {
+            this.isActive = isActive;
+        }
+
+        public String getTournamentName() {
+            return tournamentName;
+        }
+
+        public void setTournamentName(String tournamentName) {
+            this.tournamentName = tournamentName;
+        }
+
+        public String getTeamOneUrl() {
+            return teamOneUrl;
+        }
+
+        public void setTeamOneUrl(String teamOneUrl) {
+            this.teamOneUrl = teamOneUrl;
+        }
+
+        public String getTeamTwoUrl() {
+            return teamTwoUrl;
+        }
+
+        public void setTeamTwoUrl(String teamTwoUrl) {
+            this.teamTwoUrl = teamTwoUrl;
+        }
+
         public String getTypeShort() {
             return typeShort;
         }

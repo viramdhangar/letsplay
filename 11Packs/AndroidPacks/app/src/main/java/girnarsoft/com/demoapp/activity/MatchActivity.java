@@ -1,29 +1,13 @@
 package girnarsoft.com.demoapp.activity;
 
 import android.databinding.ViewDataBinding;
-import android.support.annotation.IdRes;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import girnarsoft.com.demoapp.R;
-import girnarsoft.com.demoapp.activity.adapter.MatchRecyclerAdapter;
-import girnarsoft.com.demoapp.activity.model.MatchModel;
-import girnarsoft.com.demoapp.activity.service.IMatchService;
-import girnarsoft.com.demoapp.activity.viewModel.MatchViewModel;
 import girnarsoft.com.demoapp.databinding.ActivityMatchBinding;
-import girnarsoft.com.demoapp.databinding.ListContainerBinding;
 import girnarsoft.com.demoapp.fragment.MatchLeagueFragment;
 import girnarsoft.com.demoapp.fragment.MatchListFragment;
-import girnarsoft.com.demoapp.network.servicelocator.ServiceLocator;
-import girnarsoft.com.demoapp.network.viewcallback.AbstractViewCallback;
-import girnarsoft.com.demoapp.utils.CommonUtility;
 import girnarsoft.com.demoapp.utils.NormalUtility;
-import girnarsoft.com.demoapp.utils.ValidationUtils;
 import girnarsoft.com.demoapp.utils.bottomBar.BottomBar;
-import girnarsoft.com.demoapp.utils.bottomBar.OnTabReselectListener;
-import girnarsoft.com.demoapp.utils.bottomBar.OnTabSelectListener;
 
 public class MatchActivity extends AbstractAppCompactActivity {
 

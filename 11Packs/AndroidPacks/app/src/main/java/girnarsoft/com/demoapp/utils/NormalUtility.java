@@ -52,8 +52,11 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -926,6 +929,24 @@ public final class NormalUtility {
             });
         }
     }*/
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+    public static long getCurrentMiliSecond(String date){
+        long timeInMilliseconds = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+            Date mDate = sdf.parse(date);
+            timeInMilliseconds = mDate.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeInMilliseconds;
+    }
 
     public static int convertDPtoPixels(Context context, int dp) {
         Resources resource = context.getResources();

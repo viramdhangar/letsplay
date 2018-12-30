@@ -7,7 +7,7 @@
     <data>
         <variable
             name="matchModel"
-            type="girnarsoft.com.demoapp.activity.model.MatchModel"/>
+            type="girnarsoft.com.demoapp.fragment.model.MatchModel"/>
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -29,6 +29,10 @@
                 android:layout_alignParentStart="true"
                 android:layout_width="@dimen/dimen_eighty"
                 android:layout_height="@dimen/dimen_eighty"
+                android:contentDescription="@null"
+                app:imageUrl="@{matchModel.teamOneUrl}"
+                app:placeholder="@{@drawable/defaultimage}"
+                tools:src="@drawable/defaultimage"
                 android:src="@drawable/defaultimage"/>
             <LinearLayout
                 android:layout_toLeftOf="@+id/ivTeamTwo"
@@ -82,6 +86,10 @@
                 android:layout_alignParentEnd="true"
                 android:layout_width="@dimen/dimen_eighty"
                 android:layout_height="@dimen/dimen_eighty"
+                android:contentDescription="@null"
+                app:imageUrl="@{matchModel.teamTwoUrl}"
+                app:placeholder="@{@drawable/defaultimage}"
+                tools:src="@drawable/defaultimage"
                 android:src="@drawable/defaultimage"/>
 
         </RelativeLayout>
